@@ -1,14 +1,29 @@
 "use server";
 
-import { FC, PropsWithChildren } from "react";
+import { NextPage } from "next";
 
-const WelcomeLayout: FC<PropsWithChildren> = ({ children }) => {
+import { PropsWithChildren } from "react";
+
+const WelcomeLayout: NextPage<PropsWithChildren> = async ({ children }) => {
   return (
-    <div className="m-auto md:ml-48">
-      <h1 className="mb-12 text-3xl font-black">
-        NextJS <span className="text-green-400">starter</span> pack
-      </h1>
-      {children}
+    <div className="flex flex-col items-center min-h-screen px-4 py-8 bg-sky-50 text-sky-900">
+      {/* Header */}
+      <header className="mb-8 text-center">
+        <h1 className="mb-2 text-3xl font-black">
+          NextJS <span className="text-sky-600">starter</span> pack
+        </h1>
+        <p className="text-sm text-sky-700">
+          Une base pour démarrer avec Next.js
+        </p>
+      </header>
+
+      {/* Contenu principal */}
+      <main className="flex-1 w-full max-w-2xl">{children}</main>
+
+      {/* Footer */}
+      <footer className="mt-8 text-sm text-sky-600">
+        © {new Date().getFullYear()} Fastack
+      </footer>
     </div>
   );
 };
