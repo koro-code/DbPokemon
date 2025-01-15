@@ -1,17 +1,20 @@
-// src/app/search/page.tsx
-"use client";
+"use server";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 
-export default function SearchResultPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const query = searchParams.get("q") || "";
+import { FC } from "react";
+
+const Page: FC<{
+  params: Promise<{
+    input: string;
+  }>;
+}> = async ({ params }) => {
+  const { input } = await params;
 
   return (
     <div className="mt-10">
       <h2 className="mb-4 text-xl font-semibold">
-        Résultats pour : <span className="text-green-400">{query}</span>
+        Résultats pour : <span className="text-green-400">{input}</span>
       </h2>
       <div className="mb-8 space-y-2">
         {/* Ici tu pourras lister tes résultats, par exemple depuis une API */}
@@ -21,11 +24,13 @@ export default function SearchResultPage() {
         </p>
       </div>
       <button
-        onClick={() => router.back()}
+        onClick={() => redirect("/", RedirectType.push)}
         className="px-4 py-2 font-semibold text-white bg-zinc-700 rounded hover:bg-zinc-600 transition-colors"
       >
         Retour
       </button>
     </div>
   );
-}
+};
+
+export default Page;

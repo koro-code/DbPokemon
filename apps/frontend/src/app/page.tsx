@@ -1,4 +1,3 @@
-// src/app/page.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -12,7 +11,7 @@ export default function HomePage() {
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-    router.push(`/search?q=${encodeURIComponent(query)}`);
+    router.push(`/search/${encodeURIComponent(query)}`);
   };
 
   return (
