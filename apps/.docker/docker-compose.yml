@@ -1,0 +1,58 @@
+services:
+  fastack-ollama:
+    image: ollama/ollama:latest
+    hostname: ollama.fastack
+    container_name: ollama
+    restart: always
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+
+  fastack-ollama-pull:
+    image: curlimages/curl:latest
+    hostname: ollama-pull.fastack
+    container_name: ollama-pull
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c", "/ollama-pull.sh"]
+    environment:
+      OLLAMA_MODEL: llama3.2:1b
+    volumes:
+      - ./docker-ollama-pull.sh:/ollama-pull.sh
+
+  fastack-ollama-ui:
+    image: ghcr.io/open-webui/open-webui:main
+    hostname: ollama-ui.fastack
+    container_name: ollama-ui
+    restart: always
+    depends_on:
+      - fastack-ollama
+    environment:
+      OLLAMA_URL: "http://ollama.fastack:11434"
+    volumes:
+      - ollama-ui:/app/backend/data
+    ports:
+      - "8080:8080"
+
+  fastack-database:
+    image: postgres
+    hostname: database.fastack
+    container_name: database
+    restart: always
+    volumes:
+      - database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "fastack"
+      POSTGRES_PASSWORD: "fastack"
+    ports:
+      - "5432:5432"
+
+networks:
+  default:
+    name: fastack
+    driver: bridge
+
+volumes:
+  ollama:
+  ollama-ui:
+  database:
