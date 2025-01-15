@@ -20,8 +20,8 @@ services:
       SPARQL_UPDATE: "true"
       DEFAULT_GRAPH: "http://www.example.com/my-graph"
     volumes:
-      - ../virtuoso/data:/data
-      - ../virtuoso/db:/opt/virtuoso/db
+      - ./virtuoso/data:/data
+      - ./virtuoso/db:/opt/virtuoso/db
     ports:
       - "8890:8890"
 
