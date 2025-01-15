@@ -20,15 +20,15 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   initialScale: 1.0,
-  colorScheme: "dark",
   width: "device-width",
+  // colorScheme: "dark" // on supprime pour passer en mode clair
 };
 
 const Layout: NextPage<PropsWithChildren> = ({ children }) => {
   return (
     <html lang="en">
       <body
-        className={`${inter.className} h-screen max-w-screen text-white bg-zinc-800`}
+        className={`${inter.className} h-screen max-w-screen text-sky-900 bg-sky-50`}
       >
         <WelcomeLayout>
           <FocusableInitialization config={{}}>

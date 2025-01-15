@@ -1,3 +1,4 @@
+// src/app/page.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -18,18 +19,18 @@ export default function HomePage() {
     <div className="mt-10">
       <form
         onSubmit={handleSearch}
-        className="flex items-center gap-2 bg-zinc-700 rounded p-4"
+        className="flex items-center gap-2 p-4 bg-white rounded shadow"
       >
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher..."
-          className="flex-1 px-2 py-2 text-sm text-black rounded focus:outline-none"
+          className="flex-1 px-2 py-2 text-sm text-sky-900 rounded focus:outline-none"
         />
         <button
           type="submit"
-          className="px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded hover:bg-green-500 transition-colors"
+          className="px-4 py-2 text-sm font-semibold text-white bg-sky-500 rounded hover:bg-sky-400 transition-colors"
         >
           Rechercher
         </button>
