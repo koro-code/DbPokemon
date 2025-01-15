@@ -1,3 +1,5 @@
+// src/app/layout.tsx
+
 import { Inter } from "next/font/google";
 
 import { PropsWithChildren } from "react";
