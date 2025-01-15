@@ -15,3 +15,12 @@ node_modules/
 .vscode/
 
 .eslintcache
+apps/virtuoso/data/.dba_pwd_set
+apps/virtuoso/data/clean-logs.sh
+apps/virtuoso/data/virtuoso-temp.db
+apps/virtuoso/data/virtuoso.db
+apps/virtuoso/data/virtuoso.ini
+apps/virtuoso/data/virtuoso.lck
+apps/virtuoso/data/virtuoso.log
+apps/virtuoso/data/virtuoso.pxa
+apps/virtuoso/data/virtuoso.trx
