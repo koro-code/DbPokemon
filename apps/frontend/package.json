@@ -16,7 +16,6 @@
     "@heroicons/react": "^2.2.0",
     "@sinclair/typebox": "^0.34.11",
     "ai": "^4.0.20",
-    "ollama-ai-provider": "^1.1.0",
     "http-proxy": "^1.18.1",
     "next": "^15.1.1",
     "openapi-fetch": "^0.13.3",
