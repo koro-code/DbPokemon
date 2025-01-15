@@ -20,7 +20,7 @@ Once the container is up update the virtuoso.ini file
 ```
 DirsAllowed			= ., /usr/local/virtuoso-opensource/share/virtuoso/vad, /data
 ```
-Up and down the container then enter bash 
+Down and up the container then enter bash 
 
 ````bash
 docker exec -it virtuoso bash
