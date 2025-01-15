@@ -1,9 +1,10 @@
-// src/react/components/WelcomeLayout.tsx
-"use server"; // ou rien du tout, par défaut c'est un Server Component
+"use server";
 
-import { FC, PropsWithChildren } from "react";
+import { NextPage } from "next";
 
-const WelcomeLayout: FC<PropsWithChildren> = ({ children }) => {
+import { PropsWithChildren } from "react";
+
+const WelcomeLayout: NextPage<PropsWithChildren> = async ({ children }) => {
   return (
     <div className="flex flex-col items-center min-h-screen px-4 py-8 bg-sky-50 text-sky-900">
       {/* Header */}
