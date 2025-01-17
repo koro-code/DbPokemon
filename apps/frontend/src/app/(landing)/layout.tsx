@@ -16,9 +16,8 @@ const Layout: NextPage<PropsWithChildren> = ({ children }) => {
           <h1 className="text-2xl font-bold text-slate-800 mb-8">
             Rechercher un Pokémon
           </h1>
-
-          <div className="flex items-stretch gap-4">
-            <div className="flex-[2] bg-white border border-slate-200 rounded-lg hover:border-sky-200 focus-within:border-sky-200 transition-colors h-11">
+          <div className="flex gap-x-4">
+            <div className="flex bg-white border border-slate-200 rounded-lg hover:border-sky-200 focus-within:border-sky-200 transition-colors">
               <SearchBar />
             </div>
             <span className="text-slate-400 self-center">ou</span>

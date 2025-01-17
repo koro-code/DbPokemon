@@ -18,10 +18,10 @@ const FilterBar: FC = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="w-full flex items-center justify-center gap-2 px-4 h-11 bg-white border border-slate-200 rounded-lg hover:border-sky-200 text-slate-700"
+        className="w-full flex items-center justify-center gap-2 px-4 py-1 bg-white border border-slate-200 rounded-lg hover:border-sky-200 text-slate-700"
       >
         <TagIcon className="w-5 h-5" />
-        Recherche par caractéristiques
+        <span>Recherche par caractéristiques</span>
       </button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
