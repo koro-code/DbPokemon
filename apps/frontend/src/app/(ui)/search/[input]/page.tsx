@@ -43,7 +43,7 @@ const Page: NextPage<{
   return (
     <div>
       <div className="pb-6 mb-6 border-b border-slate-200">
-        <h2 className="text-xl font-medium text-slate-800 mb-2">
+        <h2 className="text-xl font-medium mb-2">
           Résultats pour:{" "}
           <span className="text-sky-600 font-semibold">{input}</span>
         </h2>

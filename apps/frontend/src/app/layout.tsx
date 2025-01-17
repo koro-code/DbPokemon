@@ -23,7 +23,7 @@ const Layout: NextPage<PropsWithChildren> = async ({ children }) => {
   return (
     <html lang="en">
       <body
-        className={`${inter.className} h-screen max-w-screen text-sky-900 bg-sky-50`}
+        className={`${inter.className} h-screen max-w-screen text-slate-800 bg-sky-50`}
       >
         <WelcomeLayout>{children}</WelcomeLayout>
       </body>
