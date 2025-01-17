@@ -1,7 +1,6 @@
 "use server";
 
 import { FC } from "react";
-
 import Row from "./Row";
 
 const List: FC<{
@@ -16,10 +15,14 @@ const List: FC<{
     color: string;
     category: string;
   }>;
-}> = (props) => {
+}> = ({ list }) => {
+  if (!list || list.length === 0) {
+    return <p className="text-slate-500">Aucun Pokémon trouvé.</p>;
+  }
+
   return (
     <div className="grid gap-4 max-w-3xl">
-      {props.list.map((item) => (
+      {list.map((item) => (
         <Row key={item.id} {...item} />
       ))}
     </div>
