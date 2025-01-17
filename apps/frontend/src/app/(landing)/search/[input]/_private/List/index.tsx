@@ -9,12 +9,18 @@ const List: FC<{
     id: number;
     name: string;
     image: string;
+    description: string;
+    types: string[];
+    height: number;
+    weight: number;
+    color: string;
+    category: string;
   }>;
 }> = (props) => {
   return (
     <div className="flex flex-col space-y-4 max-w-3xl">
       {props.list.map((item) => (
-        <Row key={item.id} id={item.id} name={item.name} image={item.image} />
+        <Row key={item.id} {...item} />
       ))}
     </div>
   );

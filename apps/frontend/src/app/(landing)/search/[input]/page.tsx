@@ -16,18 +16,26 @@ const Page: NextPage<{
       name: "Bulbasaur",
       image:
         "https://pokemonkg.org/media/image/sugimori-early/pokemon/abra-gen1.jpg",
+      description:
+        "Il y a une graine sur son dos depuis sa naissance. Elle grossit un peu chaque jour.",
+      types: ["Plante", "Poison"],
+      height: 0.7,
+      weight: 6.9,
+      color: "Vert",
+      category: "Graine",
     },
     {
       id: 2,
       name: "Ivysaur",
       image:
         "https://pokemonkg.org/media/image/sugimori-early/pokemon/abra-gen1.jpg",
-    },
-    {
-      id: 3,
-      name: "Venusaur",
-      image:
-        "https://pokemonkg.org/media/image/sugimori-early/pokemon/abra-gen1.jpg",
+      description:
+        "Le bulbe sur son dos devient si gros qu'il ne peut plus se tenir sur ses pattes arrière.",
+      types: ["Plante", "Poison"],
+      height: 1.0,
+      weight: 13.0,
+      color: "Vert",
+      category: "Graine",
     },
   ];
 
