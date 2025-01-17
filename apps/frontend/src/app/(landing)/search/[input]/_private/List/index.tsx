@@ -18,7 +18,7 @@ const List: FC<{
   }>;
 }> = (props) => {
   return (
-    <div className="flex flex-col space-y-4 max-w-3xl">
+    <div className="grid gap-4 max-w-3xl">
       {props.list.map((item) => (
         <Row key={item.id} {...item} />
       ))}

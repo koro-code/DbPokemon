@@ -32,8 +32,8 @@ const Row: FC<{
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex items-start p-4 gap-6">
-      <div className="relative h-32 w-32 flex-shrink-0 rounded-lg overflow-hidden bg-white flex items-center justify-center">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex items-start p-3 gap-4">
+      <div className="relative h-24 w-24 flex-shrink-0 rounded-lg overflow-hidden bg-white flex items-center justify-center">
         <Image
           src={props.image}
           alt={props.name}
@@ -44,30 +44,30 @@ const Row: FC<{
         />
       </div>
       <div className="flex-grow">
-        <div className="mb-3">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-gray-500 text-sm font-medium">
+        <div className="mb-2">
+          <div className="flex items-center gap-1 mb-1">
+            <span className="text-gray-500 text-xs font-medium">
               #{props.id}
             </span>
-            <h3 className="font-semibold text-xl text-gray-800">
+            <h3 className="font-semibold text-lg text-gray-800">
               {props.name}
             </h3>
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-2">
+          <div className="flex flex-wrap gap-1 mb-1">
             {props.types.map((type) => (
               <span
                 key={type}
-                className={`px-2 py-1 rounded-full text-xs font-medium ${typeColors[type] || "bg-gray-100 text-gray-800"}`}
+                className={`px-2 py-0.5 rounded-full text-xs font-medium ${typeColors[type] || "bg-gray-100 text-gray-800"}`}
               >
                 {type}
               </span>
             ))}
           </div>
 
-          <p className="text-gray-600 text-sm mb-3">{props.description}</p>
+          <p className="text-gray-600 text-xs mb-2">{props.description}</p>
 
-          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+          <div className="grid grid-cols-2 gap-2 text-xs mb-3">
             <div>
               <span className="text-gray-500">Catégorie:</span> {props.category}
             </div>
@@ -85,7 +85,7 @@ const Row: FC<{
 
         <Link
           href={`/info/${props.id}`}
-          className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-sky-500 rounded-lg hover:bg-sky-400 transition-colors gap-2"
+          className="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-sky-500 rounded-lg hover:bg-sky-400 transition-colors gap-1"
         >
           Voir les détails
         </Link>

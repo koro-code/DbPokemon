@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@fastack/react-spatial": "workspace:^",
+    "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@sinclair/typebox": "^0.34.13",
     "ai": "^4.0.38",
