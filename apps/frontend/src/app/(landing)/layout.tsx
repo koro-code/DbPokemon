@@ -8,10 +8,12 @@ import SearchBar from "@/app/(landing)/_private/SearchBar";
 
 const Layout: NextPage<PropsWithChildren> = ({ children }) => {
   return (
-    <>
-      <SearchBar />
-      <div className="mt-10">{children}</div>
-    </>
+    <div className="container mx-auto px-4 py-4">
+      <div className="mb-4">
+        <SearchBar />
+      </div>
+      {children}
+    </div>
   );
 };
 
