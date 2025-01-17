@@ -11,17 +11,19 @@ import {
 } from "@headlessui/react";
 import { TagIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-const FilterBar: FC = () => {
+const FilterBar: FC<{
+  title: string;
+}> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="w-full flex items-center justify-center gap-2 px-4 py-1 bg-white border border-slate-200 rounded-lg hover:border-sky-200 text-slate-700"
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-lg hover:border-sky-200 text-slate-700"
       >
         <TagIcon className="w-5 h-5" />
-        <span>Recherche par caractéristiques</span>
+        <span>{props.title}</span>
       </button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
@@ -58,7 +60,7 @@ const FilterBar: FC = () => {
                       as="h3"
                       className="text-lg font-medium text-slate-900"
                     >
-                      Recherche par caractéristiques
+                      {props.title}
                     </DialogTitle>
                     <button
                       onClick={() => setIsOpen(false)}

@@ -18,16 +18,15 @@ const Layout: NextPage<PropsWithChildren> = ({ children }) => {
           </h1>
           <div className="flex gap-x-4">
             <div className="flex bg-white border border-slate-200 rounded-lg hover:border-sky-200 focus-within:border-sky-200 transition-colors">
-              <SearchBar />
+              <SearchBar title={"Nom"} />
             </div>
-            <span className="text-slate-400 self-center">ou</span>
+            <span className="text-slate-400 self-center">et</span>
             <div className="flex-1">
-              <FilterBar />
+              <FilterBar title={"Caractéristiques"} />
             </div>
           </div>
         </div>
-
-        {children}
+        <div className="px-5">{children}</div>
       </div>
     </div>
   );
