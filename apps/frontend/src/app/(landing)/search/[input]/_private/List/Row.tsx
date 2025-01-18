@@ -19,20 +19,19 @@ const Row: FC<{
   // Debug : Vérifier les données reçues
   console.log("Props reçus :", props);
 
-  // Extraire la couleur depuis l'URI si nécessaire
-  const color = "bleu";
-
   // Convertir `height` et `weight` s'ils sont sous forme d'URI
-  const height = typeof props.height === "string" && props.height.startsWith("http")
-    ? parseFloat(props.height.split("/").pop() || "0")
-    : props.height;
+  const height =
+    typeof props.height === "string" && props.height.startsWith("http")
+      ? parseFloat(props.height.split("/").pop() || "0")
+      : props.height;
 
-  const weight = typeof props.weight === "string" && props.weight.startsWith("http")
-    ? parseFloat(props.weight.split("/").pop() || "0")
-    : props.weight;
+  const weight =
+    typeof props.weight === "string" && props.weight.startsWith("http")
+      ? parseFloat(props.weight.split("/").pop() || "0")
+      : props.weight;
 
   // Gestion des types (chaîne → tableau)
-  const types = "fire,water,grass".split(",");
+  const types = props.types.value.split(", ");
 
   // Couleurs pour les types
   const typeColors: Record<string, string> = {
@@ -48,9 +47,13 @@ const Row: FC<{
     Fighting: "bg-orange-100 text-orange-800",
     Psychic: "bg-fuchsia-100 text-fuchsia-800",
     Grass: "bg-green-100 text-green-800",
+    Rock: "bg-brown-100 text-brown-800",
+    Steel: "bg-gray-100 text-gray-800",
+    Ice: "bg-cyan-100 text-cyan-800",
+    Ghost: "bg-indigo-100 text-indigo-800",
+    Dragon: "bg-violet-100 text-violet-800",
+    Dark: "bg-black-100 text-black-800",
   };
-
-  console.log("Image:", props.image.value);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex items-start p-3 gap-4">
@@ -67,8 +70,9 @@ const Row: FC<{
       <div className="flex-grow">
         <div className="mb-2">
           <div className="flex items-center gap-1 mb-1">
-            <span className="text-gray-500 text-xs font-medium">#1</span>
-            <h3 className="font-semibold text-lg text-gray-800">{props.pokemonName.value}</h3>
+            <h3 className="font-semibold text-lg text-gray-800">
+              {props.pokemonName.value}
+            </h3>
           </div>
 
           <div className="flex flex-wrap gap-1 mb-1">
@@ -86,26 +90,28 @@ const Row: FC<{
 
           <div className="grid grid-cols-2 gap-2 text-xs mb-3">
             <div>
-              {/* <span className="text-gray-500">Catégorie:</span> {props.category || "Inconnu"} */}
-            </div>
-            {/* <div>
-              <span className="text-gray-500">Couleur:</span> {color}
+              <span className="text-gray-500">Habitats:</span>{" "}
+              {props.habitats.value}
             </div>
             <div>
-              <span className="text-gray-500">Taille:</span> {height}m
+              <span className="text-gray-500">Couleur:</span>{" "}
+              {props.colour.value}
             </div>
             <div>
-              <span className="text-gray-500">Poids:</span> {weight}kg
-            </div> */}
+              <span className="text-gray-500">Taille:</span> {height.value}
+            </div>
+            <div>
+              <span className="text-gray-500">Poids:</span> {weight.value}
+            </div>
           </div>
         </div>
 
-        {/* <Link
-          href={`/info/${props.id}`}
+        <Link
+          href={`/info/${props.pokemonName.value}`}
           className="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-sky-500 rounded-lg hover:bg-sky-400 transition-colors gap-1"
         >
           Voir les détails
-        </Link> */}
+        </Link>
       </div>
     </div>
   );
