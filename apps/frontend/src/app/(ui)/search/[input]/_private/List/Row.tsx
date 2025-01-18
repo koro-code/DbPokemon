@@ -6,37 +6,49 @@ import Link from "next/link";
 import { FC } from "react";
 
 const Row: FC<{
-  id: number;
-  name: string;
-  image: string;
-  description: string;
-  types: string[];
-  height: number;
-  weight: number;
-  color: string;
-  category: string;
+  id: { value: number };
+  pokemonName: { value: string };
+  image: { value: string };
+  description: { value: string };
+  types: { value: string }; // Chaîne contenant les types séparés par des virgules
+  height: { value: string | number }; // Peut contenir un URI ou une valeur directe
+  weight: { value: string | number }; // Peut contenir un URI ou une valeur directe
+  colour: { value: string };
+  habitats: { value: string };
 }> = (props) => {
+
+  // Gestion des types (chaîne → tableau)
+  console.log(props.types.value);
+  const types = props.types.value.split(", ");
+
+  // Couleurs pour les types
   const typeColors: Record<string, string> = {
-    Plante: "bg-green-100 text-green-800",
+    Flying: "bg-sky-100 text-sky-800",
     Poison: "bg-purple-100 text-purple-800",
-    Feu: "bg-red-100 text-red-800",
-    Eau: "bg-blue-100 text-blue-800",
-    Vol: "bg-sky-100 text-sky-800",
-    Insecte: "bg-lime-100 text-lime-800",
+    Fire: "bg-red-100 text-red-800",
+    Water: "bg-blue-100 text-blue-800",
+    Bug: "bg-lime-100 text-lime-800",
     Normal: "bg-gray-100 text-gray-800",
-    Électrik: "bg-yellow-100 text-yellow-800",
-    Sol: "bg-amber-100 text-amber-800",
-    Fée: "bg-pink-100 text-pink-800",
-    Combat: "bg-orange-100 text-orange-800",
-    Psy: "bg-fuchsia-100 text-fuchsia-800",
+    Electric: "bg-yellow-100 text-yellow-800",
+    Ground: "bg-amber-100 text-amber-800",
+    Fairy: "bg-pink-100 text-pink-800",
+    Fighting: "bg-orange-100 text-orange-800",
+    Psychic: "bg-fuchsia-100 text-fuchsia-800",
+    Grass: "bg-green-100 text-green-800",
+    Rock: "bg-brown-100 text-brown-800",
+    Steel: "bg-gray-100 text-gray-800",
+    Ice: "bg-cyan-100 text-cyan-800",
+    Ghost: "bg-indigo-100 text-indigo-800",
+    Dragon: "bg-violet-100 text-violet-800",
+    Dark: "bg-black-100 text-black-800",
   };
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex items-start p-3 gap-4">
       <div className="relative h-24 w-24 flex-shrink-0 rounded-lg overflow-hidden bg-white flex items-center justify-center">
         <Image
-          src={props.image}
-          alt={props.name}
+          src={props.image.value}
+          alt={props.pokemonName.value}
           fill
           sizes="(max-width: 128px) 100vw, 128px"
           className="object-contain p-1 hover:scale-110 transition-transform duration-300"
@@ -46,16 +58,11 @@ const Row: FC<{
       <div className="flex-grow">
         <div className="mb-2">
           <div className="flex items-center gap-1 mb-1">
-            <span className="text-gray-500 text-xs font-medium">
-              #{props.id}
-            </span>
-            <h3 className="font-semibold text-lg text-gray-800">
-              {props.name}
-            </h3>
+            <h3 className="font-semibold text-lg text-gray-800">{props.pokemonName.value}</h3>
           </div>
 
           <div className="flex flex-wrap gap-1 mb-1">
-            {props.types.map((type) => (
+            {types.map((type) => (
               <span
                 key={type}
                 className={`px-2 py-0.5 rounded-full text-xs font-medium ${typeColors[type] || "bg-gray-100 text-gray-800"}`}
@@ -65,26 +72,26 @@ const Row: FC<{
             ))}
           </div>
 
-          <p className="text-gray-600 text-xs mb-2">{props.description}</p>
+          {/* <p className="text-gray-600 text-xs mb-2">{props.comment.value}</p> Plutot sur la page du pokemon */}
 
           <div className="grid grid-cols-2 gap-2 text-xs mb-3">
             <div>
-              <span className="text-gray-500">Catégorie:</span> {props.category}
+              <span className="text-gray-500">Habitats:</span> {props.habitats.value}
             </div>
             <div>
-              <span className="text-gray-500">Couleur:</span> {props.color}
+              <span className="text-gray-500">Couleur:</span> {props.colour.value}
             </div>
             <div>
-              <span className="text-gray-500">Taille:</span> {props.height}m
+              <span className="text-gray-500">Taille:</span> {props.height.value}
             </div>
             <div>
-              <span className="text-gray-500">Poids:</span> {props.weight}kg
+              <span className="text-gray-500">Poids:</span> {props.weight.value}
             </div>
           </div>
         </div>
 
         <Link
-          href={`/info/${props.id}`}
+          href={`/info/${props.pokemonName.value}`}
           className="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-sky-500 rounded-lg hover:bg-sky-400 transition-colors gap-1"
         >
           Voir les détails
