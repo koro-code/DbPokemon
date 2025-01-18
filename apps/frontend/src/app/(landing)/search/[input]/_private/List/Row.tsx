@@ -6,29 +6,16 @@ import Link from "next/link";
 import { FC } from "react";
 
 const Row: FC<{
-  id: number;
-  name: string;
-  image: string;
-  description: string;
-  types: string[];
-  height: string | number;
-  weight: string | number;
-  color: string;
-  category: string;
+  id: { value: number };
+  pokemonName: { value: string };
+  image: { value: string };
+  description: { value: string };
+  types: { value: string }; // Chaîne contenant les types séparés par des virgules
+  height: { value: string | number }; // Peut contenir un URI ou une valeur directe
+  weight: { value: string | number }; // Peut contenir un URI ou une valeur directe
+  colour: { value: string };
+  habitats: { value: string };
 }> = (props) => {
-  // Debug : Vérifier les données reçues
-  console.log("Props reçus :", props);
-
-  // Convertir `height` et `weight` s'ils sont sous forme d'URI
-  const height =
-    typeof props.height === "string" && props.height.startsWith("http")
-      ? parseFloat(props.height.split("/").pop() || "0")
-      : props.height;
-
-  const weight =
-    typeof props.weight === "string" && props.weight.startsWith("http")
-      ? parseFloat(props.weight.split("/").pop() || "0")
-      : props.weight;
 
   // Gestion des types (chaîne → tableau)
   const types = props.types.value.split(", ");
@@ -70,9 +57,7 @@ const Row: FC<{
       <div className="flex-grow">
         <div className="mb-2">
           <div className="flex items-center gap-1 mb-1">
-            <h3 className="font-semibold text-lg text-gray-800">
-              {props.pokemonName.value}
-            </h3>
+            <h3 className="font-semibold text-lg text-gray-800">{props.pokemonName.value}</h3>
           </div>
 
           <div className="flex flex-wrap gap-1 mb-1">
@@ -86,22 +71,20 @@ const Row: FC<{
             ))}
           </div>
 
-          <p className="text-gray-600 text-xs mb-2">{props.description}</p>
+          {/* <p className="text-gray-600 text-xs mb-2">{props.comment.value}</p> Plutot sur la page du pokemon */}
 
           <div className="grid grid-cols-2 gap-2 text-xs mb-3">
             <div>
-              <span className="text-gray-500">Habitats:</span>{" "}
-              {props.habitats.value}
+              <span className="text-gray-500">Habitats:</span> {props.habitats.value}
             </div>
             <div>
-              <span className="text-gray-500">Couleur:</span>{" "}
-              {props.colour.value}
+              <span className="text-gray-500">Couleur:</span> {props.colour.value}
             </div>
             <div>
-              <span className="text-gray-500">Taille:</span> {height.value}
+              <span className="text-gray-500">Taille:</span> {props.height.value}
             </div>
             <div>
-              <span className="text-gray-500">Poids:</span> {weight.value}
+              <span className="text-gray-500">Poids:</span> {props.weight.value}
             </div>
           </div>
         </div>
