@@ -70,6 +70,7 @@ const Row: FC<Pokemon> = (props) => {
           <div className="flex flex-wrap gap-1 mb-1">
             {types.map((type) => (
               <Link
+                key={type}
                 href={`/type/${type}`}
                 className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
               >
