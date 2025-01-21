@@ -75,14 +75,14 @@ const PokemonDetailPage: NextPage<{
   LIMIT 1`;
 
   const sparqlUrl = `${sparqlEndpoint}?query=${encodeURIComponent(
-    sparqlQuery,
+    sparqlQuery
   )}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
 
   const response = await fetch(sparqlUrl);
 
   if (!response.ok) {
     throw new Error(
-      `Erreur lors de la requête SPARQL : ${response.statusText}`,
+      `Erreur lors de la requête SPARQL : ${response.statusText}`
     );
   }
 
@@ -137,7 +137,7 @@ const PokemonDetailPage: NextPage<{
                 {types.value.split(",").map((type: string) => (
                   <Link
                     key={type}
-                    href={`/type/${type}`}
+                    href={`/details/${type}/poketype`}
                     className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
                   >
                     {type}

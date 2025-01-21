@@ -71,7 +71,7 @@ const Row: FC<Pokemon> = (props) => {
             {types.map((type) => (
               <Link
                 key={type}
-                href={`/type/${type}`}
+                href={`/details/${type}/poketype`}
                 className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
               >
                 {type}
