@@ -50,30 +50,25 @@ const Layout: NextPage<PropsWithChildren> = ({ children }) => {
 
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="p-8 mb-8">
-          <h1 className="text-2xl font-bold mb-8">
-            Résultats de la recherche par type
-          </h1>
-          <p>Choisir un autre type :</p>
-          <div className="flex flex-wrap gap-2">
-            {types.length > 0 ? (
-              types.map((type) => (
-                <Link
-                  key={type}
-                  href={`/details/${type}/poketype`}
-                  className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
-                >
-                  {type}
-                </Link>
-              ))
-            ) : (
-              <p>Chargement des types...</p>
-            )}
-          </div>
+      <div className="p-8 mb-8">
+        <p>Choisir un autre type :</p>
+        <div className="flex flex-wrap gap-2 bg-white p-2 rounded-lg">
+          {types.length > 0 ? (
+            types.map((type) => (
+              <Link
+                key={type}
+                href={`/details/${type}/poketype`}
+                className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
+              >
+                {type}
+              </Link>
+            ))
+          ) : (
+            <p>Chargement des types...</p>
+          )}
         </div>
-        <div className="px-5">{children}</div>
       </div>
+      <div className="px-5">{children}</div>
     </div>
   );
 };
