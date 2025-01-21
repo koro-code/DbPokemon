@@ -134,7 +134,7 @@ const PokemonDetailPage: NextPage<{
               <span className="flex gap-1 mt-1">
                 {types.value.split(",").map((type: string) => (
                   <Link
-                    href={`/type/${type}/pokemon`}
+                    href={`/type/${type}`}
                     className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
                   >
                     {type}

@@ -70,12 +70,12 @@ const Row: FC<Pokemon> = (props) => {
           </div>
           <div className="flex flex-wrap gap-1 mb-1">
             {types.map((type) => (
-              <span
-                key={type}
-                className={`px-2 py-0.5 rounded-full text-xs font-medium ${colors[type] || "bg-gray-100 text-gray-800"}`}
+              <Link
+                href={`/type/${type}`}
+                className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
               >
                 {type}
-              </span>
+              </Link>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-2 text-xs mb-3">

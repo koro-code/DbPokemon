@@ -38,7 +38,7 @@ WHERE {
   
   # Filtrage par type Pokémon
   ?pokemon poke:hasType ?type .
-  FILTER(STR(?type) = "${input}")
+  FILTER(CONTAINS(STR(?type), "${input}")) .
   
   ?pokemon poke:foundIn ?habitat .
   ?pokemon poke:hasColour ?colour .
