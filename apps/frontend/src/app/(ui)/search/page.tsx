@@ -2,17 +2,60 @@
 
 import { NextPage } from "next";
 
-const Page: NextPage = () => {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-2xl font-semibold mb-4">
-          Aucune recherche effectuée
-        </h2>
-        <p className="text-gray-600 mb-8">
-          Veuillez saisir un terme de recherche pour trouver des Pokémon.
-        </p>
+import { getSparqlQuery, SearchFilter } from "./_private/api/sparql";
+import List from "./_private/components/List";
+import { Pokemon } from "./_private/components/List/Row";
+
+const Page: NextPage<{
+  searchParams: Promise<{
+    filter?: string;
+  }>;
+}> = async (props) => {
+  const { filter } = await props.searchParams;
+
+  const sparqlEndpoint = "http://localhost:8890/sparql";
+
+  const queryFilters: SearchFilter = filter ? JSON.parse(filter) : {};
+
+  const sparqlQuery = await getSparqlQuery(queryFilters);
+
+  if (Object.values(queryFilters).every((v) => !v)) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-2xl font-semibold mb-4">
+            Aucune recherche effectuée
+          </h2>
+          <p className="text-gray-600 mb-8">
+            Veuillez saisir un terme de recherche pour trouver des Pokémon.
+          </p>
+        </div>
       </div>
+    );
+  }
+
+  const sparqlUrl = `${sparqlEndpoint}?query=${encodeURIComponent(sparqlQuery)}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
+
+  const response = await fetch(sparqlUrl);
+
+  const data = await response.json();
+
+  const pokemons = data.results.bindings as Array<Pokemon>;
+
+  const heading = `${pokemons.length} Pokémon${pokemons.length > 1 ? "s" : ""} trouvé${pokemons.length > 1 ? "s" : ""}`;
+
+  return (
+    <div>
+      <div className="pb-6 mb-6 border-b border-slate-200">
+        <h2 className="text-xl font-medium text-slate-800 mb-2">
+          Résultats pour:{" "}
+          <span className="text-sky-600 font-semibold">
+            {queryFilters.name}
+          </span>
+        </h2>
+        <p className="text-sm text-slate-500">{heading}</p>
+      </div>
+      <List list={pokemons} />
     </div>
   );
 };

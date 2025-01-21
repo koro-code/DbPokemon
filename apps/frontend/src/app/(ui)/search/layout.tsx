@@ -1,14 +1,14 @@
-"use client";
+"use server";
 
 import { NextPage } from "next";
 
 import { PropsWithChildren } from "react";
 
-import FilterBar from "./_private/FilterBar";
+import FilterBar from "./_private/components/FilterBar";
 
-import SearchBar from "@/app/(ui)/search/_private/SearchBar";
+import SearchBar from "@/app/(ui)/search/_private/components/SearchBar";
 
-const Layout: NextPage<PropsWithChildren> = ({ children }) => {
+const Layout: NextPage<PropsWithChildren> = async (props) => {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -24,7 +24,7 @@ const Layout: NextPage<PropsWithChildren> = ({ children }) => {
             </div>
           </div>
         </div>
-        <div className="px-5">{children}</div>
+        <div className="px-5">{props.children}</div>
       </div>
     </div>
   );

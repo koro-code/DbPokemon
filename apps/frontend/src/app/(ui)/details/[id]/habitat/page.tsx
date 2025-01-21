@@ -2,8 +2,8 @@
 
 import { NextPage } from "next";
 
-import List from "../../../search/_private/components/List";
-import { Pokemon } from "../../../search/_private/components/List/Row";
+import List from "@/app/(ui)/search/_private/components/List";
+import { Pokemon } from "@/app/(ui)/search/_private/components/List/Row";
 
 const Page: NextPage<{
   params: Promise<{ id: string }>;
@@ -39,7 +39,7 @@ WHERE {
   
   # Filtrage par type Pokémon
   ?pokemon poke:hasType ?type .
-  FILTER(CONTAINS(STR(?type), "${id}")) .
+  FILTER(CONTAINS(STR(?habitat), "${id}")) .
   
   ?pokemon poke:foundIn ?habitat .
   ?pokemon poke:hasColour ?colour .
@@ -82,7 +82,7 @@ LIMIT 100
     <div>
       <div className="pb-6 mb-6 border-b border-slate-200">
         <h2 className="text-xl font-medium text-slate-800 mb-2">
-          Résultats pour le type:{" "}
+          Résultats pour l'habitat:{" "}
           <span className="text-sky-600 font-semibold">{id}</span>
         </h2>
         <p className="text-sm text-slate-500">{heading}</p>

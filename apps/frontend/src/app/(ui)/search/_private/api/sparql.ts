@@ -1,18 +1,17 @@
-"use server";
+export type SearchFilter = Partial<{
+  name: string;
+  type: string;
+  size: string;
+  weight: string;
+}>;
 
-import { NextPage } from "next";
-
-import List from "./_private/List";
-import { Pokemon } from "./_private/List/Row";
-
-const Page: NextPage<{
-  params: Promise<{ input: string }>;
-}> = async (props) => {
-  const { input } = await props.params;
-
-  const sparqlEndpoint = "http://localhost:8890/sparql";
-
-  const sparqlQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+export const getSparqlQuery = async ({
+  name,
+  type,
+  weight,
+}: SearchFilter): Promise<string> => {
+  return `
+PREFIX rdf: <http://www.w3.org/1999/02/22/rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX poke: <https://pokemonkg.org/ontology#>
@@ -31,10 +30,12 @@ SELECT DISTINCT
   ?comment
   (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?egg), "#EggGroup:")) ; SEPARATOR=", ") AS ?eggGroups)
   ?image
+  ?pokemon AS ?pokemonID  # Ajout de l'ID du Pokémon
 WHERE {
+
   ?pokemon a poke:Species .
   ?pokemon rdfs:label ?label .
-  FILTER(LANG(?label) = "fr")
+  FILTER(LANG(?label) = "en")
   
   ?pokemon poke:hasType ?type .
   ?pokemon poke:foundIn ?habitat .
@@ -44,6 +45,7 @@ WHERE {
   ?pokemon rdfs:comment ?comment .
   ?pokemon poke:inEggGroup ?egg .
   ?image foaf:depicts ?pokemon .
+
   FILTER(CONTAINS(STR(?image), STR(STRAFTER(STR(?pokemon), "/pokemon/"))) && CONTAINS(STR(?image), ".png"))
   
   # Récupération de la taille
@@ -53,39 +55,12 @@ WHERE {
   # Récupération du poids
   ?pokemon poke:hasWeight ?weight .
   ?weight qudt:quantityValue ?weightValue .
-  FILTER(CONTAINS(STR(?pokemon), "${input}"))
+  
+  ${type ? `FILTER(CONTAINS(STR(?type), "${type}"))` : ""}
+  ${name ? `FILTER(CONTAINS(STR(?pokemon), "${name}"))` : ""}
+  ${weight ? `FILTER(CONTAINS(STR(?weightValue), "${weight}"))` : ""}
 }
 GROUP BY ?pokemon ?label ?weightValue ?heightValue ?habitat ?colour ?comment ?image
-LIMIT 100`;
-
-  const sparqlUrl = `${sparqlEndpoint}?query=${encodeURIComponent(sparqlQuery)}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
-
-  const response = await fetch(sparqlUrl);
-
-  if (!response.ok) {
-    throw new Error(
-      `Erreur lors de la requête SPARQL : ${response.statusText}`,
-    );
-  }
-
-  const data = await response.json();
-
-  const pokemons = data.results.bindings as Array<Pokemon>;
-
-  const heading = `${pokemons.length} Pokémon${pokemons.length > 1 ? "s" : ""} trouvé${pokemons.length > 1 ? "s" : ""}`;
-
-  return (
-    <div>
-      <div className="pb-6 mb-6 border-b border-slate-200">
-        <h2 className="text-xl font-medium text-slate-800 mb-2">
-          Résultats pour:{" "}
-          <span className="text-sky-600 font-semibold">{input}</span>
-        </h2>
-        <p className="text-sm text-slate-500">{heading}</p>
-      </div>
-      <List list={pokemons} />
-    </div>
-  );
+LIMIT 100
+`;
 };
-
-export default Page;

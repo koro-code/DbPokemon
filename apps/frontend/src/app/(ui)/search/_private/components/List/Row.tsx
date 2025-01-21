@@ -64,23 +64,29 @@ const Row: FC<Pokemon> = (props) => {
         <div className="mb-2">
           <div className="flex items-center gap-1 mb-1">
             <h3 className="font-semibold text-lg text-gray-800">
-              {props.pokemonName.value}
+              {props.label.value}
             </h3>
           </div>
           <div className="flex flex-wrap gap-1 mb-1">
             {types.map((type) => (
-              <span
+              <Link
                 key={type}
-                className={`px-2 py-0.5 rounded-full text-xs font-medium ${colors[type] || "bg-gray-100 text-gray-800"}`}
+                href={`/details/${type}/poketype`}
+                className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
               >
                 {type}
-              </span>
+              </Link>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-2 text-xs mb-3">
             <div>
               <span className="text-gray-500">Habitats:</span>{" "}
-              {props.habitats.value}
+              <Link
+                href={`/details/${props.habitats.value}/habitat`}
+                className="text-sky-500 hover:underline"
+              >
+                {props.habitats.value}
+              </Link>
             </div>
             <div>
               <span className="text-gray-500">Couleur:</span>{" "}
