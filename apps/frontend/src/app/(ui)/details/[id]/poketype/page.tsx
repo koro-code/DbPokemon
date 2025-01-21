@@ -35,7 +35,7 @@ SELECT DISTINCT
 WHERE {
   ?pokemon a poke:Species .
   ?pokemon rdfs:label ?label .
-  FILTER(LANG(?label) = "fr")
+  FILTER(LANG(?label) = "en")
   
   # Filtrage par type Pokémon
   ?pokemon poke:hasType ?type .

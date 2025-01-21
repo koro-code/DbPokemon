@@ -64,7 +64,7 @@ const Row: FC<Pokemon> = (props) => {
         <div className="mb-2">
           <div className="flex items-center gap-1 mb-1">
             <h3 className="font-semibold text-lg text-gray-800">
-              {props.pokemonName.value}
+              {props.label.value}
             </h3>
           </div>
           <div className="flex flex-wrap gap-1 mb-1">
