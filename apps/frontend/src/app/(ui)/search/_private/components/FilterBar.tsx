@@ -54,10 +54,7 @@ const FilterBar: FC<{
       weight: selectedWeight,
     };
 
-    redirect(
-      `${pathname}?filter=${JSON.stringify(filter)}`,
-      RedirectType.replace
-    );
+    redirect(`${pathname}?filter=${JSON.stringify(filter)}`, RedirectType.push);
   }, [selectedSize, selectedWeight, pathname]);
 
   return (
