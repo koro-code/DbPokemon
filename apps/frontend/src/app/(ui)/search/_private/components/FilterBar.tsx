@@ -121,9 +121,16 @@ const FilterBar: FC<{
                       </h4>
                       <div className="flex flex-wrap gap-3">
                         {[
-                          { value: "<1m", label: "< 1m" },
-                          { value: "1m-2m", label: "1m - 2m" },
-                          { value: ">2m", label: "> 2m" },
+                          { value: "100.0M", label: "< 100.0M" },
+                          { value: "80.0M", label: "< 80.0M" },
+                          { value: "60.0M", label: "< 60.0M" },
+                          { value: "40.0M", label: "< 40.0M" },
+                          { value: "20.0M", label: "< 20.0M" },
+                          { value: "10.0M", label: "< 10.0M" },
+                          { value: "5.0M", label: "< 5.0M" },
+                          { value: "2.0M", label: "< 2.0M" },
+                          { value: "1.0M", label: "< 1.0M" },
+                          { value: "0.5M", label: "< 0.5M" },
                         ].map((option) => (
                           <label
                             key={option.value}
@@ -161,9 +168,16 @@ const FilterBar: FC<{
                       </h4>
                       <div className="flex flex-wrap gap-3">
                         {[
-                          { value: "<10kg", label: "< 10kg" },
-                          { value: "10kg-50kg", label: "10kg - 50kg" },
-                          { value: ">50kg", label: "> 50kg" },
+                          { value: "100.0KG", label: "< 100.0KG" },
+                          { value: "80.0KG", label: "< 80.0KG" },
+                          { value: "60.0KG", label: "< 60.0KG" },
+                          { value: "40.0KG", label: "< 40.0KG" },
+                          { value: "20.0KG", label: "< 20.0KG" },
+                          { value: "10.0KG", label: "< 10.0KG" },
+                          { value: "5.0KG", label: "< 5.0KG" },
+                          { value: "2.0KG", label: "< 2.0KG" },
+                          { value: "1.0KG", label: "< 1.0KG" },
+                          { value: "0.5KG", label: "< 0.5KG" },
                         ].map((option) => (
                           <label
                             key={option.value}
