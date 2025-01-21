@@ -116,9 +116,6 @@ const PokemonDetailPage: NextPage<{
     image,
   } = pokemon;
 
-  const abilities = abilitiesList.value.split(" ");
-
-
   // Query to get all pokemons of the same color
   const colorQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22/rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -237,16 +234,7 @@ LIMIT 100`;
               </span>
             </p>
             <p>
-              <strong>Capacités :</strong>
-              <span className="flex gap-1 mt-1">
-                {abilities.map((ability) => (
-                  <Link key={ability} href={`/details/${ability}/abilities`}>
-                    <span className="px-3 py-0.5 rounded-full bg-blue-100 text-blue-800 text-sm font-medium cursor-pointer hover:bg-blue-200">
-                      {ability}
-                    </span>
-                  </Link>
-                ))}
-              </span>
+              <strong>Capacités :</strong> {abilitiesList.value}
             </p>
             <p>
               <strong>Capacités cachées :</strong> {hiddenAbilitiesList.value}
