@@ -47,7 +47,7 @@ const SearchBar: FC<{ title: string }> = (props) => {
 
         redirect(
           `${pathname}?filter=${JSON.stringify(filter)}`,
-          RedirectType.push
+          RedirectType.push,
         );
       }}
     >
