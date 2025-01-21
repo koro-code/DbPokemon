@@ -1,9 +1,8 @@
 "use server";
 
+import List from "@/app/(ui)/search/_private/components/List";
 import { NextPage } from "next";
 import Link from "next/link";
-
-import List from "@/app/(ui)/search/_private/components/List";
 
 const PokemonDetailPage: NextPage<{
   params: Promise<{ id: string }>;
@@ -52,39 +51,39 @@ const PokemonDetailPage: NextPage<{
     (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?egg), "#EggGroup:")) ; SEPARATOR=", ") AS ?eggGroups)
     ?image
   WHERE {
-    ?pokemon a poke:Species . 
-    ?pokemon rdfs:label ?label . 
+    ?pokemon a poke:Species .
+    ?pokemon rdfs:label ?label .
     FILTER(LANG(?label) = "en")
     
-    ?pokemon poke:hasType ?type . 
-    ?pokemon poke:foundIn ?habitat . 
-    ?pokemon poke:hasColour ?colour . 
-    ?pokemon poke:mayHaveAbility ?abilities . 
-    ?pokemon poke:mayHaveHiddenAbility ?hiddenAbilities . 
-    ?pokemon rdfs:comment ?comment . 
-    ?pokemon poke:inEggGroup ?egg . 
-    ?image foaf:depicts ?pokemon . 
+    ?pokemon poke:hasType ?type .
+    ?pokemon poke:foundIn ?habitat .
+    ?pokemon poke:hasColour ?colour .
+    ?pokemon poke:mayHaveAbility ?abilities .
+    ?pokemon poke:mayHaveHiddenAbility ?hiddenAbilities .
+    ?pokemon rdfs:comment ?comment .
+    ?pokemon poke:inEggGroup ?egg .
+    ?image foaf:depicts ?pokemon .
     FILTER(CONTAINS(STR(?image), STR(STRAFTER(STR(?pokemon), "/pokemon/"))) && CONTAINS(STR(?image), ".png"))
     
-    ?pokemon poke:hasHeight ?height . 
-    ?height qudt:quantityValue ?heightValue . 
+    ?pokemon poke:hasHeight ?height .
+    ?height qudt:quantityValue ?heightValue .
     
-    ?pokemon poke:hasWeight ?weight . 
-    ?weight qudt:quantityValue ?weightValue . 
+    ?pokemon poke:hasWeight ?weight .
+    ?weight qudt:quantityValue ?weightValue .
     FILTER(CONTAINS(STR(?pokemon), "${id}"))
   }
   GROUP BY ?label ?weightValue ?heightValue ?colour ?comment ?image
   LIMIT 1`;
 
   const sparqlUrl = `${sparqlEndpoint}?query=${encodeURIComponent(
-    sparqlQuery,
+    sparqlQuery
   )}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
 
   const response = await fetch(sparqlUrl);
 
   if (!response.ok) {
     throw new Error(
-      `Erreur lors de la requête SPARQL : ${response.statusText}`,
+      `Erreur lors de la requête SPARQL : ${response.statusText}`
     );
   }
 
@@ -115,68 +114,78 @@ const PokemonDetailPage: NextPage<{
     eggGroups,
     image,
   } = pokemon;
-
-  // Query to get all pokemons of the same color
   const colorQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22/rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-PREFIX poke: <https://pokemonkg.org/ontology#>
-PREFIX qudt: <http://qudt.org/schema/qudt/>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+  PREFIX poke: <https://pokemonkg.org/ontology#>
+  PREFIX qudt: <http://qudt.org/schema/qudt/>
+  
+  SELECT DISTINCT
+    (STRAFTER(STR(?pokemon), "/pokemon/") AS ?pokemonName)
+    ?label
+    (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?type), "#PokéType:")) ; SEPARATOR=", ") AS ?types)
+    (STRAFTER(STR(?weightValue), "/value/") AS ?weight)
+    (STRAFTER(STR(?heightValue), "/value/") AS ?height)
+    (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?habitat), "#Habitat:")) ; SEPARATOR=", ") AS ?habitats)
+    (STRAFTER(STR(?colour), "resource/") AS ?colour)
+    (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?abilities), "/ability/")) ; SEPARATOR=", ") AS ?abilitiesList)
+    (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?hiddenAbilities), "/ability/")) ; SEPARATOR=", ") AS ?hiddenAbilitiesList)
+    ?comment
+    (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?egg), "#EggGroup:")) ; SEPARATOR=", ") AS ?eggGroups)
+    ?image
+    ?pokemon AS ?pokemonID
+  WHERE {
+    ?pokemon a poke:Species .
+    ?pokemon rdfs:label ?label .
+    FILTER(LANG(?label) = "en")
+    
+    # Filtrage par type Pokémon
+    ?pokemon poke:hasType ?type .
+    
+    ?pokemon poke:foundIn ?habitat .
+    ?pokemon poke:hasColour ?colour .
+    ?pokemon poke:mayHaveAbility ?abilities .
+    ?pokemon poke:mayHaveHiddenAbility ?hiddenAbilities .
+    ?pokemon rdfs:comment ?comment .
+    ?pokemon poke:inEggGroup ?egg .
+    ?image foaf:depicts ?pokemon .
+    FILTER(CONTAINS(STR(?image), STR(STRAFTER(STR(?pokemon), "/pokemon/"))) && CONTAINS(STR(?image), ".png"))
+    
+    # Récupération de la taille
+    ?pokemon poke:hasHeight ?height .
+    ?height qudt:quantityValue ?heightValue .
+    
+    # Récupération du poids
+    ?pokemon poke:hasWeight ?weight .
+    ?weight qudt:quantityValue ?weightValue .
+    ?pokemon poke:hasColour <http://dbpedia.org/resource/${colour.value}> .
+  }
+  GROUP BY ?pokemon ?label ?weightValue ?heightValue ?habitat ?colour ?comment ?image
+  LIMIT 100`;
+  
+    const colorUrl = `${sparqlEndpoint}?query=${encodeURIComponent(colorQuery)}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
+  
+    const colorResponse = await fetch(colorUrl);
+    if (!colorResponse.ok) {
+      throw new Error(
+        `Erreur lors de la requête SPARQL pour la couleur : ${colorResponse.statusText}`,
+      );
+    }
+  
+    const colorData = await colorResponse.json();
+    const pokemonsOfSameColor = colorData.results.bindings;
+  // Fetch Pokémon cards from API based on label
+  const cardsResponse = await fetch(
+    `https://api.pokemontcg.io/v2/cards?q=name:${label.value}`
+  );
 
-SELECT DISTINCT
-  (STRAFTER(STR(?pokemon), "/pokemon/") AS ?pokemonName)
-  ?label
-  (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?type), "#PokéType:")) ; SEPARATOR=", ") AS ?types)
-  (STRAFTER(STR(?weightValue), "/value/") AS ?weight)
-  (STRAFTER(STR(?heightValue), "/value/") AS ?height)
-  (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?habitat), "#Habitat:")) ; SEPARATOR=", ") AS ?habitats)
-  (STRAFTER(STR(?colour), "resource/") AS ?colour)
-  (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?abilities), "/ability/")) ; SEPARATOR=", ") AS ?abilitiesList)
-  (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?hiddenAbilities), "/ability/")) ; SEPARATOR=", ") AS ?hiddenAbilitiesList)
-  ?comment
-  (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?egg), "#EggGroup:")) ; SEPARATOR=", ") AS ?eggGroups)
-  ?image
-  ?pokemon AS ?pokemonID
-WHERE {
-  ?pokemon a poke:Species .
-  ?pokemon rdfs:label ?label .
-  FILTER(LANG(?label) = "en")
-  
-  # Filtrage par type Pokémon
-  ?pokemon poke:hasType ?type .
-  
-  ?pokemon poke:foundIn ?habitat .
-  ?pokemon poke:hasColour ?colour .
-  ?pokemon poke:mayHaveAbility ?abilities .
-  ?pokemon poke:mayHaveHiddenAbility ?hiddenAbilities .
-  ?pokemon rdfs:comment ?comment .
-  ?pokemon poke:inEggGroup ?egg .
-  ?image foaf:depicts ?pokemon .
-  FILTER(CONTAINS(STR(?image), STR(STRAFTER(STR(?pokemon), "/pokemon/"))) && CONTAINS(STR(?image), ".png"))
-  
-  # Récupération de la taille
-  ?pokemon poke:hasHeight ?height .
-  ?height qudt:quantityValue ?heightValue .
-  
-  # Récupération du poids
-  ?pokemon poke:hasWeight ?weight .
-  ?weight qudt:quantityValue ?weightValue .
-  ?pokemon poke:hasColour <http://dbpedia.org/resource/${colour.value}> .
-}
-GROUP BY ?pokemon ?label ?weightValue ?heightValue ?habitat ?colour ?comment ?image
-LIMIT 100`;
-
-  const colorUrl = `${sparqlEndpoint}?query=${encodeURIComponent(colorQuery)}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
-
-  const colorResponse = await fetch(colorUrl);
-  if (!colorResponse.ok) {
-    throw new Error(
-      `Erreur lors de la requête SPARQL pour la couleur : ${colorResponse.statusText}`,
-    );
+  if (!cardsResponse.ok) {
+    throw new Error(`Erreur lors de la requête des cartes : ${cardsResponse.statusText}`);
   }
 
-  const colorData = await colorResponse.json();
-  const pokemonsOfSameColor = colorData.results.bindings;
+  const cardsData = await cardsResponse.json();
+  const cards: Array<{ id: string; images: { small: string }; name: string }> = cardsData.data || [];
+
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -216,22 +225,10 @@ LIMIT 100`;
               <strong>Taille :</strong> {height.value}
             </p>
             <p>
-              <strong>Habitat :</strong>
-              <Link
-                href={`/details/${habitats.value}/habitat`}
-                className="text-sky-500 hover:underline"
-              >
-                {habitats.value}
-              </Link>
+              <strong>Habitat :</strong> {habitats.value}
             </p>
             <p>
-              <strong>Couleur :</strong>
-              <span
-                style={{ background: colour.value }}
-                className="px-2 py-1 rounded-md text-black"
-              >
-                {colour.value}
-              </span>
+              <strong>Couleur :</strong> {colour.value}
             </p>
             <p>
               <strong>Capacités :</strong> {abilitiesList.value}
@@ -251,14 +248,34 @@ LIMIT 100`;
         </div>
       </div>
 
-      {/* Liste des Pokémon de la même couleur */}
-      <div className="mt-6">
+      {/* Cartes Pokémon */}
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Cartes associées</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {cards.map((card: { id: string; images: { small: string }; name: string }) => (
+            <div
+              key={card.id}
+              className="flex flex-col items-center bg-white rounded-lg shadow-md overflow-hidden p-4"
+            >
+              <img
+                src={card.images.small}
+                alt={card.name}
+                className="w-full h-auto object-cover rounded-md border border-gray-200 shadow-md"
+              />
+              <p className="text-sm font-medium mt-2 text-center">
+                {card.name}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-6">
         <h2 className="text-2xl font-semibold text-sky-600 mb-4">
           Pokémons de la même couleur :
         </h2>
         <List list={pokemonsOfSameColor} />
       </div>
     </div>
+      </div>
   );
 };
 
