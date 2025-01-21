@@ -56,7 +56,7 @@ const FilterBar: FC<{
 
     redirect(
       `${pathname}?filter=${JSON.stringify(filter)}`,
-      RedirectType.replace,
+      RedirectType.replace
     );
   }, [selectedSize, selectedWeight, pathname]);
 
@@ -64,7 +64,7 @@ const FilterBar: FC<{
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-lg hover:border-sky-200 text-slate-700"
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-lg hover:border-sky-200 text-slate-700 transition-colors duration-200"
       >
         <TagIcon className="w-5 h-5" />
         <span>{props.title}</span>
@@ -98,86 +98,102 @@ const FilterBar: FC<{
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <DialogPanel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 shadow-xl transition-all">
-                  <div className="flex justify-between items-center mb-6">
+                <DialogPanel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-8 shadow-xl transition-all">
+                  <div className="flex justify-between items-center mb-8">
                     <DialogTitle
                       as="h3"
-                      className="text-lg font-medium text-slate-900"
+                      className="text-xl font-semibold text-slate-900"
                     >
                       {props.title}
                     </DialogTitle>
                     <button
                       onClick={() => setIsOpen(false)}
-                      className="text-slate-500 hover:text-slate-700"
+                      className="p-2 rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors"
                     >
                       <XMarkIcon className="w-5 h-5" />
                     </button>
                   </div>
 
-                  <div className="space-y-6">
+                  <div className="space-y-8">
                     <div>
-                      <h4 className="text-sm font-medium text-slate-700 mb-3">
+                      <h4 className="text-sm font-medium text-slate-700 mb-4">
                         Taille
                       </h4>
-                      <div className="flex flex-wrap gap-2">
-                        <label>
-                          <input
-                            type="radio"
-                            name="size"
-                            value="<1m"
-                            checked={selectedSize === "<1m"}
-                            onChange={(e) => setSelectedSize(e.target.value)}
-                          />
-                          <span>&lt;1m</span>
-                        </label>
-                        <label>
-                          <input
-                            type="radio"
-                            name="size"
-                            value="1m-2m"
-                            checked={selectedSize === "1m-2m"}
-                            onChange={(e) => setSelectedSize(e.target.value)}
-                          />
-                          <span>1m-2m</span>
-                        </label>
-                        <label>
-                          <input
-                            type="radio"
-                            name="size"
-                            value=">2m"
-                            checked={selectedSize === ">2m"}
-                            onChange={(e) => setSelectedSize(e.target.value)}
-                          />
-                          <span>&gt;2m</span>
-                        </label>
+                      <div className="flex flex-wrap gap-3">
+                        {[
+                          { value: "<1m", label: "< 1m" },
+                          { value: "1m-2m", label: "1m - 2m" },
+                          { value: ">2m", label: "> 2m" },
+                        ].map((option) => (
+                          <label
+                            key={option.value}
+                            className="relative flex items-center group"
+                          >
+                            <input
+                              type="radio"
+                              name="size"
+                              value={option.value}
+                              checked={selectedSize === option.value}
+                              onChange={(e) => setSelectedSize(e.target.value)}
+                              className="absolute w-full h-full opacity-0 cursor-pointer"
+                            />
+                            <span
+                              className={`
+                              px-4 py-2 rounded-lg border text-sm font-medium
+                              transition-colors duration-200 cursor-pointer
+                              ${
+                                selectedSize === option.value
+                                  ? "border-sky-600 bg-sky-50 text-sky-600"
+                                  : "border-slate-200 text-slate-600 hover:border-sky-200 hover:bg-sky-50/50"
+                              }
+                            `}
+                            >
+                              {option.label}
+                            </span>
+                          </label>
+                        ))}
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="text-sm font-medium text-slate-700 mb-3">
+                      <h4 className="text-sm font-medium text-slate-700 mb-4">
                         Poids
                       </h4>
-                      <div className="flex flex-wrap gap-2">
-                        <label>
-                          <input
-                            type="radio"
-                            name="weight"
-                            value="<10kg"
-                            checked={selectedWeight === "<10kg"}
-                            onChange={(e) => setSelectedWeight(e.target.value)}
-                          />
-                          <span>&lt;10kg</span>
-                        </label>
-                        {/* Add more weight options */}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="text-sm font-medium text-slate-700 mb-3">
-                        Type
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {/* Add type options */}
+                      <div className="flex flex-wrap gap-3">
+                        {[
+                          { value: "<10kg", label: "< 10kg" },
+                          { value: "10kg-50kg", label: "10kg - 50kg" },
+                          { value: ">50kg", label: "> 50kg" },
+                        ].map((option) => (
+                          <label
+                            key={option.value}
+                            className="relative flex items-center group"
+                          >
+                            <input
+                              type="radio"
+                              name="weight"
+                              value={option.value}
+                              checked={selectedWeight === option.value}
+                              onChange={(e) =>
+                                setSelectedWeight(e.target.value)
+                              }
+                              className="absolute w-full h-full opacity-0 cursor-pointer"
+                            />
+                            <span
+                              className={`
+                              px-4 py-2 rounded-lg border text-sm font-medium
+                              transition-colors duration-200 cursor-pointer
+                              ${
+                                selectedWeight === option.value
+                                  ? "border-sky-600 bg-sky-50 text-sky-600"
+                                  : "border-slate-200 text-slate-600 hover:border-sky-200 hover:bg-sky-50/50"
+                              }
+                            `}
+                            >
+                              {option.label}
+                            </span>
+                          </label>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -185,17 +201,18 @@ const FilterBar: FC<{
                   <div className="mt-8 flex justify-end gap-3">
                     <button
                       onClick={() => setIsOpen(false)}
-                      className="px-4 py-2 text-slate-700 hover:bg-slate-100 rounded-lg"
+                      className="px-4 py-2 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors duration-200"
                     >
                       Annuler
                     </button>
                     <button
                       onClick={() => {
                         handleFilter();
+                        setIsOpen(false);
                       }}
-                      className="px-5 py-2.5 bg-sky-600 text-white font-medium rounded-lg hover:bg-sky-500 transition-colors"
+                      className="px-5 py-2.5 bg-sky-600 text-white font-medium rounded-lg hover:bg-sky-500 transition-colors duration-200"
                     >
-                      Rechercher
+                      Appliquer les filtres
                     </button>
                   </div>
                 </DialogPanel>
