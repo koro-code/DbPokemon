@@ -2,8 +2,8 @@
 
 import { NextPage } from "next";
 
-import List from "../../../search/[input]/_private/List";
-import { Pokemon } from "../../../search/[input]/_private/List/Row";
+import List from "../../../search/_private/components/List";
+import { Pokemon } from "../../../search/_private/components/List/Row";
 
 const Page: NextPage<{
   params: Promise<{ id: string }>;
@@ -68,7 +68,7 @@ LIMIT 100
 
   if (!response.ok) {
     throw new Error(
-      `Erreur lors de la requête SPARQL : ${response.statusText}`
+      `Erreur lors de la requête SPARQL : ${response.statusText}`,
     );
   }
 

@@ -81,7 +81,10 @@ const Row: FC<Pokemon> = (props) => {
           <div className="grid grid-cols-2 gap-2 text-xs mb-3">
             <div>
               <span className="text-gray-500">Habitats:</span>{" "}
-              <Link href={`/details/${props.habitats.value}/habitat`} className="text-sky-500 hover:underline">
+              <Link
+                href={`/details/${props.habitats.value}/habitat`}
+                className="text-sky-500 hover:underline"
+              >
                 {props.habitats.value}
               </Link>
             </div>

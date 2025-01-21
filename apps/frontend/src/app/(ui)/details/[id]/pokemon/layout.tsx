@@ -1,8 +1,9 @@
 "use server";
 
-import List from "@/app/(ui)/search/[input]/_private/List";
 import { NextPage } from "next";
 import Link from "next/link";
+
+import List from "@/app/(ui)/search/_private/components/List";
 
 const PokemonDetailPage: NextPage<{
   params: Promise<{ id: string }>;
@@ -76,14 +77,14 @@ const PokemonDetailPage: NextPage<{
   LIMIT 1`;
 
   const sparqlUrl = `${sparqlEndpoint}?query=${encodeURIComponent(
-    sparqlQuery
+    sparqlQuery,
   )}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
 
   const response = await fetch(sparqlUrl);
 
   if (!response.ok) {
     throw new Error(
-      `Erreur lors de la requête SPARQL : ${response.statusText}`
+      `Erreur lors de la requête SPARQL : ${response.statusText}`,
     );
   }
 
@@ -169,12 +170,13 @@ LIMIT 100`;
 
   const colorResponse = await fetch(colorUrl);
   if (!colorResponse.ok) {
-    throw new Error(`Erreur lors de la requête SPARQL pour la couleur : ${colorResponse.statusText}`);
+    throw new Error(
+      `Erreur lors de la requête SPARQL pour la couleur : ${colorResponse.statusText}`,
+    );
   }
 
   const colorData = await colorResponse.json();
   const pokemonsOfSameColor = colorData.results.bindings;
-  console.log(pokemonsOfSameColor);
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -215,13 +217,19 @@ LIMIT 100`;
             </p>
             <p>
               <strong>Habitat :</strong>
-              <Link href={`/details/${habitats.value}/habitat`} className="text-sky-500 hover:underline">
-                { habitats.value}
+              <Link
+                href={`/details/${habitats.value}/habitat`}
+                className="text-sky-500 hover:underline"
+              >
+                {habitats.value}
               </Link>
             </p>
             <p>
               <strong>Couleur :</strong>
-              <span style={{ background: colour.value }} className="px-2 py-1 rounded-md text-black">
+              <span
+                style={{ background: colour.value }}
+                className="px-2 py-1 rounded-md text-black"
+              >
                 {colour.value}
               </span>
             </p>
@@ -245,7 +253,9 @@ LIMIT 100`;
 
       {/* Liste des Pokémon de la même couleur */}
       <div className="mt-6">
-        <h2 className="text-2xl font-semibold text-sky-600 mb-4">Pokémons de la même couleur :</h2>
+        <h2 className="text-2xl font-semibold text-sky-600 mb-4">
+          Pokémons de la même couleur :
+        </h2>
         <List list={pokemonsOfSameColor} />
       </div>
     </div>

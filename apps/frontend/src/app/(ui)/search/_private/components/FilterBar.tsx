@@ -7,7 +7,7 @@ import {
   useSearchParams,
 } from "next/navigation";
 
-import { FC, Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   Dialog,
@@ -18,78 +18,47 @@ import {
 } from "@headlessui/react";
 import { TagIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
+import { SearchFilter } from "../api/sparql";
+
 const FilterBar: FC<{
   title: string;
-}> = ({ title }) => {
+}> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const queryparams = useSearchParams();
+  const searchParams = useSearchParams();
 
-  const { sizes, weights } = useMemo(() => {
-    const filter = queryparams.get("filter");
+  const filterValue: SearchFilter = useMemo(() => {
+    const filterParam = searchParams.get("filter");
 
-    if (filter) {
-      const { sizes, weights } = JSON.parse(filter);
-
-      return {
-        sizes: new Set<string>(sizes),
-        weights: new Set<string>(weights),
-      };
-    } else {
-      return {
-        sizes: new Set<string>(),
-        weights: new Set<string>(),
-      };
+    if (filterParam) {
+      return JSON.parse(filterParam);
     }
-  }, [queryparams]);
 
-  const [selectedSize, setSelectedSize] = useState<Set<string>>(sizes);
-  const [selectedWeight, setSelectedWeight] = useState<Set<string>>(weights);
+    return {};
+  }, [searchParams]);
 
-  const toggleSize = useCallback((size: string) => {
-    setSelectedSize((old) => {
-      if (old.has(size)) {
-        old.delete(size);
-      } else {
-        old.add(size);
-      }
+  const [selectedSize, setSelectedSize] = useState(filterValue.size);
+  const [selectedWeight, setSelectedWeight] = useState(filterValue.weight);
 
-      return new Set(old);
-    });
-  }, []);
-
-  const toggleWeight = useCallback((weight: string) => {
-    setSelectedWeight((old) => {
-      if (old.has(weight)) {
-        old.delete(weight);
-      } else {
-        old.add(weight);
-      }
-
-      return new Set(old);
-    });
-  }, []);
+  useEffect(() => {
+    setSelectedSize(filterValue.size);
+    setSelectedWeight(filterValue.weight);
+  }, [filterValue.size, filterValue.weight]);
 
   const pathname = usePathname();
 
-  const handleApplyFilters = useCallback(
-    (sizes: Set<string>, weights: Set<string>) => {
-      setIsOpen(false);
+  const handleFilter = useCallback(async () => {
+    const filter: SearchFilter = {
+      ...filterValue,
+      size: selectedSize,
+      weight: selectedWeight,
+    };
 
-      const query = new URLSearchParams();
-
-      query.set(
-        "filter",
-        JSON.stringify({
-          sizes: Array.from(sizes),
-          weights: Array.from(weights),
-        }),
-      );
-
-      redirect(`${pathname}?${query.toString()}`, RedirectType.replace);
-    },
-    [pathname],
-  );
+    redirect(
+      `${pathname}?filter=${JSON.stringify(filter)}`,
+      RedirectType.replace,
+    );
+  }, [selectedSize, selectedWeight, pathname]);
 
   return (
     <>
@@ -98,7 +67,7 @@ const FilterBar: FC<{
         className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-lg hover:border-sky-200 text-slate-700"
       >
         <TagIcon className="w-5 h-5" />
-        <span>{title}</span>
+        <span>{props.title}</span>
       </button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
@@ -135,7 +104,7 @@ const FilterBar: FC<{
                       as="h3"
                       className="text-lg font-medium text-slate-900"
                     >
-                      {title}
+                      {props.title}
                     </DialogTitle>
                     <button
                       onClick={() => setIsOpen(false)}
@@ -153,31 +122,31 @@ const FilterBar: FC<{
                       <div className="flex flex-wrap gap-2">
                         <label>
                           <input
-                            type="checkbox"
-                            checked={selectedSize.has("<1m")}
-                            onChange={() => {
-                              toggleSize("<1m");
-                            }}
+                            type="radio"
+                            name="size"
+                            value="<1m"
+                            checked={selectedSize === "<1m"}
+                            onChange={(e) => setSelectedSize(e.target.value)}
                           />
                           <span>&lt;1m</span>
                         </label>
                         <label>
                           <input
-                            type="checkbox"
-                            checked={selectedSize.has("1m-2m")}
-                            onChange={() => {
-                              toggleSize("1m-2m");
-                            }}
+                            type="radio"
+                            name="size"
+                            value="1m-2m"
+                            checked={selectedSize === "1m-2m"}
+                            onChange={(e) => setSelectedSize(e.target.value)}
                           />
                           <span>1m-2m</span>
                         </label>
                         <label>
                           <input
-                            type="checkbox"
-                            checked={selectedSize.has(">2m")}
-                            onChange={() => {
-                              toggleSize(">2m");
-                            }}
+                            type="radio"
+                            name="size"
+                            value=">2m"
+                            checked={selectedSize === ">2m"}
+                            onChange={(e) => setSelectedSize(e.target.value)}
                           />
                           <span>&gt;2m</span>
                         </label>
@@ -191,11 +160,11 @@ const FilterBar: FC<{
                       <div className="flex flex-wrap gap-2">
                         <label>
                           <input
-                            type="checkbox"
-                            checked={selectedWeight.has("<10kg")}
-                            onChange={() => {
-                              toggleWeight("<10kg");
-                            }}
+                            type="radio"
+                            name="weight"
+                            value="<10kg"
+                            checked={selectedWeight === "<10kg"}
+                            onChange={(e) => setSelectedWeight(e.target.value)}
                           />
                           <span>&lt;10kg</span>
                         </label>
@@ -222,7 +191,7 @@ const FilterBar: FC<{
                     </button>
                     <button
                       onClick={() => {
-                        handleApplyFilters(selectedSize, selectedWeight);
+                        handleFilter();
                       }}
                       className="px-5 py-2.5 bg-sky-600 text-white font-medium rounded-lg hover:bg-sky-500 transition-colors"
                     >
