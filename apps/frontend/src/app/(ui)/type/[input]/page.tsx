@@ -30,13 +30,16 @@ SELECT DISTINCT
   ?comment
   (GROUP_CONCAT(DISTINCT STR(STRAFTER(STR(?egg), "#EggGroup:")) ; SEPARATOR=", ") AS ?eggGroups)
   ?image
-  ?pokemon AS ?pokemonID  # Ajout de l'ID du Pokémon
+  ?pokemon AS ?pokemonID
 WHERE {
   ?pokemon a poke:Species .
   ?pokemon rdfs:label ?label .
   FILTER(LANG(?label) = "fr")
   
+  # Filtrage par type Pokémon
   ?pokemon poke:hasType ?type .
+  FILTER(STR(?type) = "${input}")
+  
   ?pokemon poke:foundIn ?habitat .
   ?pokemon poke:hasColour ?colour .
   ?pokemon poke:mayHaveAbility ?abilities .
@@ -53,7 +56,6 @@ WHERE {
   # Récupération du poids
   ?pokemon poke:hasWeight ?weight .
   ?weight qudt:quantityValue ?weightValue .
-  FILTER(CONTAINS(STR(?pokemon), "${input}"))
 }
 GROUP BY ?pokemon ?label ?weightValue ?heightValue ?habitat ?colour ?comment ?image
 LIMIT 100
@@ -73,13 +75,13 @@ LIMIT 100
 
   const pokemons = data.results.bindings as Array<Pokemon>;
 
-  const heading = `${pokemons.length} Pokémon${pokemons.length > 1 ? "s" : ""} trouvé${pokemons.length > 1 ? "s" : ""}`;
+  const heading = `${pokemons.length} Pokémon${pokemons.length > 1 ? "s" : ""} du type ${input} trouvé${pokemons.length > 1 ? "s" : ""}`;
 
   return (
     <div>
       <div className="pb-6 mb-6 border-b border-slate-200">
         <h2 className="text-xl font-medium text-slate-800 mb-2">
-          Résultats pour:{" "}
+          Résultats pour le type:{" "}
           <span className="text-sky-600 font-semibold">{input}</span>
         </h2>
         <p className="text-sm text-slate-500">{heading}</p>

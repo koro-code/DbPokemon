@@ -1,6 +1,7 @@
 "use server";
 
 import { NextPage } from "next";
+import Link from "next/link";
 
 const PokemonDetailPage: NextPage<{
   params: Promise<{ id: string }>;
@@ -131,21 +132,21 @@ const PokemonDetailPage: NextPage<{
             <p>
               <strong>Type :</strong>
               <span className="flex gap-1 mt-1">
-                {types.value.split(",").map((type) => (
-                  <span
-                    key={type}
+                {types.value.split(",").map((type: string) => (
+                  <Link
+                    href={`/type/${type}/pokemon`}
                     className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
                   >
                     {type}
-                  </span>
+                  </Link>
                 ))}
               </span>
             </p>
             <p>
-              <strong>Poids :</strong> {weight.value} kg
+              <strong>Poids :</strong> {weight.value}
             </p>
             <p>
-              <strong>Taille :</strong> {height.value} m
+              <strong>Taille :</strong> {height.value}
             </p>
             <p>
               <strong>Habitat :</strong> {habitats.value}
@@ -160,7 +161,7 @@ const PokemonDetailPage: NextPage<{
               <strong>Capacités cachées :</strong> {hiddenAbilitiesList.value}
             </p>
             <p>
-              <strong>Groupes d’œufs :</strong> {eggGroups.value}
+              <strong>Groupes d'œufs :</strong> {eggGroups.value}
             </p>
           </div>
           <div className="mt-4">
