@@ -214,10 +214,16 @@ LIMIT 100`;
               <strong>Taille :</strong> {height.value}
             </p>
             <p>
-              <strong>Habitat :</strong> {habitats.value}
+              <strong>Habitat :</strong>
+              <Link href={`/details/${habitats.value}/habitat`} className="text-sky-500 hover:underline">
+                { habitats.value}
+              </Link>
             </p>
             <p>
-              <strong>Couleur :</strong> {colour.value}
+              <strong>Couleur :</strong>
+              <span style={{ background: colour.value }} className="px-2 py-1 rounded-md text-black">
+                {colour.value}
+              </span>
             </p>
             <p>
               <strong>Capacités :</strong> {abilitiesList.value}
