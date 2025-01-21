@@ -1,8 +1,9 @@
 "use server";
 
 import { NextPage } from "next";
-import List from "./_private/List";
-import { Pokemon } from "./_private/List/Row";
+
+import List from "../../search/[input]/_private/List";
+import { Pokemon } from "../../search/[input]/_private/List/Row";
 
 const Page: NextPage<{
   params: Promise<{ input: string }>;

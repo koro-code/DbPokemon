@@ -35,7 +35,7 @@ Execute the following commands in order to load the graph into the container
 isql-v
 
 # load the data
-ld_dir('/', 'poke-a.nq', 'http://www.example.com/my-graph');
+ld_dir('/data', 'poke-a.nq', 'http://www.example.com/my-graph');
 
 rdf_loader_run();
 

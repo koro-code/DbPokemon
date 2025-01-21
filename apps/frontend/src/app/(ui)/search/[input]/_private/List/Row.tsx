@@ -47,7 +47,6 @@ const colors: Record<string, string> = {
 
 const Row: FC<Pokemon> = (props) => {
   const types = props.types.value.split(", ");
-  console.log(props);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex items-start p-3 gap-4">

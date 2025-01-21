@@ -1,6 +1,7 @@
 "use server";
 
 import { NextPage } from "next";
+
 import List from "./_private/List";
 import { Pokemon } from "./_private/List/Row";
 

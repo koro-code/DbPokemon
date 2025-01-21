@@ -1,7 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+
 import { FC, FormEvent, useState } from "react";
+
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const SearchBar: FC<{ title: string }> = (props) => {

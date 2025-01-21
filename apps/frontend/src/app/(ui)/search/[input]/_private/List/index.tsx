@@ -14,7 +14,7 @@ const List: FC<{
   return (
     <div className="grid gap-4 max-w-3xl">
       {list.map((item) => (
-        <Row key={item.pokemonName.value} {...item} />
+        <Row key={item.image.value} {...item} />
       ))}
     </div>
   );

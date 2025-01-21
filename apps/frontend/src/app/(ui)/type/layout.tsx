@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { NextPage } from "next";
-import { PropsWithChildren } from "react";
 import Link from "next/link";
 
-const Layout: NextPage<PropsWithChildren> = ({ children }) => {
+import { PropsWithChildren } from "react";
 
+const Layout: NextPage<PropsWithChildren> = ({ children }) => {
   const colors: Record<string, string> = {
     Flying: "bg-sky-100 text-sky-800",
     Poison: "bg-purple-100 text-purple-800",
@@ -53,7 +52,9 @@ const Layout: NextPage<PropsWithChildren> = ({ children }) => {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="p-8 mb-8">
-          <h1 className="text-2xl font-bold mb-8">Résultats de la recherche par type</h1>
+          <h1 className="text-2xl font-bold mb-8">
+            Résultats de la recherche par type
+          </h1>
           <p>Choisir un autre type :</p>
           <div className="flex flex-wrap gap-2">
             {types.length > 0 ? (

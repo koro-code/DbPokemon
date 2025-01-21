@@ -75,14 +75,14 @@ const PokemonDetailPage: NextPage<{
   LIMIT 1`;
 
   const sparqlUrl = `${sparqlEndpoint}?query=${encodeURIComponent(
-    sparqlQuery
+    sparqlQuery,
   )}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
 
   const response = await fetch(sparqlUrl);
 
   if (!response.ok) {
     throw new Error(
-      `Erreur lors de la requête SPARQL : ${response.statusText}`
+      `Erreur lors de la requête SPARQL : ${response.statusText}`,
     );
   }
 
@@ -127,13 +127,16 @@ const PokemonDetailPage: NextPage<{
         </div>
         {/* Infos à droite */}
         <div className="lg:w-2/3 p-6">
-          <h1 className="text-3xl font-bold text-sky-600 mb-4">{label.value}</h1>
+          <h1 className="text-3xl font-bold text-sky-600 mb-4">
+            {label.value}
+          </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <p>
               <strong>Type :</strong>
               <span className="flex gap-1 mt-1">
                 {types.value.split(",").map((type: string) => (
                   <Link
+                    key={type}
                     href={`/type/${type}`}
                     className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
                   >
