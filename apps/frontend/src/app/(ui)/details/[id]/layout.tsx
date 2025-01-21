@@ -13,7 +13,7 @@ const Layout: NextPage<PropsWithChildren> = async (props) => {
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="mb-8">
           <Link
-            href="../"
+            href="/"
             className="inline-flex items-center gap-2 px-4 py-2 text-sky-600 hover:bg-sky-50 rounded-lg transition-colors duration-200"
           >
             <ArrowLeftIcon className="w-5 h-5" />
