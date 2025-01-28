@@ -3,14 +3,14 @@
 import { NextPage } from "next";
 import Link from "next/link";
 
+import { fetchSparql } from "@/tools/sparql";
+
 const Page: NextPage<{
   params: Promise<{ id: string }>;
 }> = async ({ params }) => {
   const { id } = await params;
 
-  const sparqlEndpoint = "http://localhost:8890/sparql";
-
-  const sparqlQuery = `
+  const QUERY = `
   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX poke: <https://pokemonkg.org/ontology#>
@@ -29,21 +29,9 @@ const Page: NextPage<{
     LIMIT 1
   `;
 
-  const sparqlUrl = `${sparqlEndpoint}?query=${encodeURIComponent(
-    sparqlQuery,
-  )}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
+  const abilities = await fetchSparql(QUERY);
 
-  const response = await fetch(sparqlUrl);
-
-  if (!response.ok) {
-    throw new Error(
-      `Erreur lors de la requête SPARQL : ${response.statusText}`,
-    );
-  }
-
-  const data = await response.json();
-
-  const abilityData = data.results.bindings[0];
+  const abilityData = abilities[0];
 
   if (!abilityData) {
     return (

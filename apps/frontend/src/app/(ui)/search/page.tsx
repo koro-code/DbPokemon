@@ -6,6 +6,8 @@ import { getSparqlQuery, SearchFilter } from "./_private/api/sparql";
 import List from "./_private/components/List";
 import { Pokemon } from "./_private/components/List/Row";
 
+import { fetchSparql } from "@/tools/sparql";
+
 const Page: NextPage<{
   searchParams: Promise<{
     filter?: string;
@@ -13,11 +15,7 @@ const Page: NextPage<{
 }> = async (props) => {
   const { filter } = await props.searchParams;
 
-  const sparqlEndpoint = "http://localhost:8890/sparql";
-
   const queryFilters: SearchFilter = filter ? JSON.parse(filter) : {};
-
-  const sparqlQuery = await getSparqlQuery(queryFilters);
 
   if (Object.values(queryFilters).every((v) => !v)) {
     return (
@@ -34,13 +32,9 @@ const Page: NextPage<{
     );
   }
 
-  const sparqlUrl = `${sparqlEndpoint}?query=${encodeURIComponent(sparqlQuery)}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
+  const sparqlQuery = await getSparqlQuery(queryFilters);
 
-  const response = await fetch(sparqlUrl);
-
-  const data = await response.json();
-
-  const pokemons = data.results.bindings as Array<Pokemon>;
+  const pokemons = await fetchSparql<Array<Pokemon>>(sparqlQuery);
 
   const heading = `${pokemons.length} Pokémon${pokemons.length > 1 ? "s" : ""} trouvé${pokemons.length > 1 ? "s" : ""}`;
 

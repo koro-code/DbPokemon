@@ -4,6 +4,8 @@ import { NextPage } from "next";
 import Link from "next/link";
 
 import List from "@/app/(ui)/search/_private/components/List";
+import { Pokemon } from "@/app/(ui)/search/_private/components/List/Row";
+import { fetchSparql } from "@/tools/sparql";
 
 const Page: NextPage<{
   params: Promise<{ id: string }>;
@@ -31,9 +33,7 @@ const Page: NextPage<{
     Dark: "bg-black-100 text-black-800",
   };
 
-  const sparqlEndpoint = "http://localhost:8890/sparql";
-
-  const sparqlQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+  const pokemonQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   PREFIX foaf: <http://xmlns.com/foaf/0.1/>
   PREFIX poke: <https://pokemonkg.org/ontology#>
@@ -76,21 +76,9 @@ const Page: NextPage<{
   GROUP BY ?label ?weightValue ?heightValue ?colour ?comment ?image
   LIMIT 1`;
 
-  const sparqlUrl = `${sparqlEndpoint}?query=${encodeURIComponent(
-    sparqlQuery,
-  )}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
+  const pokemons = await fetchSparql<Array<Pokemon>>(pokemonQuery);
 
-  const response = await fetch(sparqlUrl);
-
-  if (!response.ok) {
-    throw new Error(
-      `Erreur lors de la requête SPARQL : ${response.statusText}`,
-    );
-  }
-
-  const data = await response.json();
-
-  const pokemon = data.results.bindings[0];
+  const pokemon = pokemons[0];
 
   if (!pokemon) {
     return (
@@ -102,20 +90,7 @@ const Page: NextPage<{
     );
   }
 
-  const {
-    label,
-    types,
-    weight,
-    height,
-    habitats,
-    colour,
-    abilitiesList,
-    hiddenAbilitiesList,
-    comment,
-    eggGroups,
-    image,
-  } = pokemon;
-  const colorQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22/rdf-syntax-ns#>
+  const COLOR_QUERY = `PREFIX rdf: <http://www.w3.org/1999/02/22/rdf-syntax-ns#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   PREFIX foaf: <http://xmlns.com/foaf/0.1/>
   PREFIX poke: <https://pokemonkg.org/ontology#>
@@ -159,25 +134,16 @@ const Page: NextPage<{
     # Récupération du poids
     ?pokemon poke:hasWeight ?weight .
     ?weight qudt:quantityValue ?weightValue .
-    ?pokemon poke:hasColour <http://dbpedia.org/resource/${colour.value}> .
+    ?pokemon poke:hasColour <http://dbpedia.org/resource/${pokemon.colour.value}> .
   }
   GROUP BY ?pokemon ?label ?weightValue ?heightValue ?habitat ?colour ?comment ?image
   LIMIT 100`;
 
-  const colorUrl = `${sparqlEndpoint}?query=${encodeURIComponent(colorQuery)}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
+  const pokemonsOfSameColor = await fetchSparql<Array<Pokemon>>(COLOR_QUERY);
 
-  const colorResponse = await fetch(colorUrl);
-  if (!colorResponse.ok) {
-    throw new Error(
-      `Erreur lors de la requête SPARQL pour la couleur : ${colorResponse.statusText}`,
-    );
-  }
-
-  const colorData = await colorResponse.json();
-  const pokemonsOfSameColor = colorData.results.bindings;
   // Fetch Pokémon cards from API based on label
   const cardsResponse = await fetch(
-    `https://api.pokemontcg.io/v2/cards?q=name:${label.value}`,
+    `https://api.pokemontcg.io/v2/cards?q=name:${pokemon.label.value}`,
   );
 
   if (!cardsResponse.ok) {
@@ -196,21 +162,21 @@ const Page: NextPage<{
         {/* Image à gauche */}
         <div className="lg:w-1/3 p-4 bg-gray-50 flex justify-center items-center">
           <img
-            src={image.value}
-            alt={label.value}
+            src={pokemon.image.value}
+            alt={pokemon.label.value}
             className="w-full h-auto max-w-xs object-cover rounded-md border border-gray-200 shadow-md"
           />
         </div>
         {/* Infos à droite */}
         <div className="lg:w-2/3 p-6">
           <h1 className="text-3xl font-bold text-sky-600 mb-4">
-            {label.value}
+            {pokemon.label.value}
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <p>
               <strong>Type :</strong>
               <span className="flex gap-1 mt-1">
-                {types.value.split(",").map((type: string) => (
+                {pokemon.types.value.split(",").map((type: string) => (
                   <Link
                     key={type}
                     href={`/details/${type}/poketype`}
@@ -222,30 +188,31 @@ const Page: NextPage<{
               </span>
             </p>
             <p>
-              <strong>Poids :</strong> {weight.value}
+              <strong>Poids :</strong> {pokemon.weight.value}
             </p>
             <p>
-              <strong>Taille :</strong> {height.value}
+              <strong>Taille :</strong> {pokemon.height.value}
             </p>
             <p>
-              <strong>Habitat :</strong> {habitats.value}
+              <strong>Habitat :</strong> {pokemon.habitats.value}
             </p>
             <p>
-              <strong>Couleur :</strong> {colour.value}
+              <strong>Couleur :</strong> {pokemon.colour.value}
             </p>
             <p>
-              <strong>Capacités :</strong> {abilitiesList.value}
+              <strong>Capacités :</strong> {pokemon.abilitiesList.value}
             </p>
             <p>
-              <strong>Capacités cachées :</strong> {hiddenAbilitiesList.value}
+              <strong>Capacités cachées :</strong>{" "}
+              {pokemon.hiddenAbilitiesList.value}
             </p>
             <p>
-              <strong>Groupes d'œufs :</strong> {eggGroups.value}
+              <strong>Groupes d'œufs :</strong> {pokemon.eggGroups.value}
             </p>
           </div>
           <div className="mt-4">
             <p>
-              <strong>Description :</strong> {comment.value}
+              <strong>Description :</strong> {pokemon.comment.value}
             </p>
           </div>
         </div>

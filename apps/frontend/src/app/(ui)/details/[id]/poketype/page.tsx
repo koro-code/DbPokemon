@@ -5,12 +5,12 @@ import { NextPage } from "next";
 import List from "../../../search/_private/components/List";
 import { Pokemon } from "../../../search/_private/components/List/Row";
 
+import { fetchSparql } from "@/tools/sparql";
+
 const Page: NextPage<{
   params: Promise<{ id: string }>;
 }> = async (props) => {
   const { id } = await props.params;
-
-  const sparqlEndpoint = "http://localhost:8890/sparql";
 
   const sparqlQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22/rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -62,19 +62,7 @@ GROUP BY ?pokemon ?label ?weightValue ?heightValue ?habitat ?colour ?comment ?im
 LIMIT 100
 `;
 
-  const sparqlUrl = `${sparqlEndpoint}?query=${encodeURIComponent(sparqlQuery)}&should-sponge=&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on`;
-
-  const response = await fetch(sparqlUrl);
-
-  if (!response.ok) {
-    throw new Error(
-      `Erreur lors de la requête SPARQL : ${response.statusText}`,
-    );
-  }
-
-  const data = await response.json();
-
-  const pokemons = data.results.bindings as Array<Pokemon>;
+  const pokemons = await fetchSparql<Array<Pokemon>>(sparqlQuery);
 
   const heading = `${pokemons.length} Pokémon${pokemons.length > 1 ? "s" : ""} du type ${id} trouvé${pokemons.length > 1 ? "s" : ""}`;
 
