@@ -2,7 +2,7 @@
 
 import { NextPage } from "next";
 
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, Suspense } from "react";
 
 import FilterBar from "./_private/components/FilterBar";
 
@@ -16,11 +16,15 @@ const Layout: NextPage<PropsWithChildren> = async (props) => {
           <h1 className="text-2xl font-bold mb-8">Rechercher un Pokémon</h1>
           <div className="flex gap-x-4">
             <div className="flex-1 bg-white border border-slate-200 rounded-lg hover:border-sky-200 focus-within:border-sky-200 transition-colors">
-              <SearchBar title={"Nom"} />
+              <Suspense>
+                <SearchBar title={"Nom"} />
+              </Suspense>
             </div>
             <span className="text-slate-400 self-center">et</span>
             <div className="flex">
-              <FilterBar title={"Caractéristiques"} />
+              <Suspense>
+                <FilterBar title={"Caractéristiques"} />
+              </Suspense>
             </div>
           </div>
         </div>

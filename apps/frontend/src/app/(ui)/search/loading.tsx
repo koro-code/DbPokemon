@@ -1,3 +1,5 @@
+"use server";
+
 import { NextPage } from "next";
 
 import Loading from "../_private/Loading";
