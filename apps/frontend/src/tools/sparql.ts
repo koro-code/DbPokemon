@@ -15,7 +15,9 @@ export const fetchSparql = async <
 >(
   query: string,
 ) => {
-  const response = await fetch(await queryUrl(query));
+  const response = await fetch(await queryUrl(query), {
+    cache: "force-cache",
+  });
 
   const json = await response.json();
 

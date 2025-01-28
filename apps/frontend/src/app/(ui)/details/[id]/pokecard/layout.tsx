@@ -15,7 +15,7 @@ const Layout: NextPage<
 > = async ({ params, children }) => {
   const { id } = await params;
 
-  return <BaseLayout title={`Pokemon ${id} card infos`}>{children}</BaseLayout>;
+  return <BaseLayout title={`Pokemon ${id} cards`}>{children}</BaseLayout>;
 };
 
 export default Layout;

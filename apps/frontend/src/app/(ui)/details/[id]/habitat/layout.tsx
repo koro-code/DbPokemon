@@ -1,15 +1,21 @@
-"use client";
+"use server";
 
 import { NextPage } from "next";
 
 import { PropsWithChildren } from "react";
 
-const Layout: NextPage<PropsWithChildren> = ({ children }) => {
-  return (
-    <div className="min-h-screen">
-      <div className="px-5">{children}</div>
-    </div>
-  );
+import { BaseLayout } from "../_private/Layout";
+
+const Layout: NextPage<
+  PropsWithChildren<{
+    params: Promise<{
+      id: string;
+    }>;
+  }>
+> = async ({ params, children }) => {
+  const { id } = await params;
+
+  return <BaseLayout title={`Habitat ${id}`}>{children}</BaseLayout>;
 };
 
 export default Layout;

@@ -12,7 +12,7 @@ const Page: NextPage<{
 }> = async ({ params }) => {
   const { id } = await params;
 
-  const colors: Record<string, string> = {
+  const TYPE_COLORS: Record<string, string> = {
     Flying: "bg-sky-100 text-sky-800",
     Poison: "bg-purple-100 text-purple-800",
     Fire: "bg-red-100 text-red-800",
@@ -90,7 +90,7 @@ const Page: NextPage<{
     );
   }
 
-  const COLOR_QUERY = `PREFIX rdf: <http://www.w3.org/1999/02/22/rdf-syntax-ns#>
+  const COLOR_QUERY = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   PREFIX foaf: <http://xmlns.com/foaf/0.1/>
   PREFIX poke: <https://pokemonkg.org/ontology#>
@@ -141,111 +141,142 @@ const Page: NextPage<{
 
   const pokemonsOfSameColor = await fetchSparql<Array<Pokemon>>(COLOR_QUERY);
 
-  // Fetch Pokémon cards from API based on label
-  const cardsResponse = await fetch(
-    `https://api.pokemontcg.io/v2/cards?q=name:${pokemon.label.value}`,
-  );
-
-  if (!cardsResponse.ok) {
-    throw new Error(
-      `Erreur lors de la requête des cartes : ${cardsResponse.statusText}`,
-    );
-  }
-
-  const cardsData = await cardsResponse.json();
-  const cards: Array<{ id: string; images: { small: string }; name: string }> =
-    cardsData.data || [];
-
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <div className="flex flex-col lg:flex-row gap-6 bg-white rounded-lg shadow-lg overflow-hidden">
+      <div className="flex flex-col lg:flex-row gap-6 bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
         {/* Image à gauche */}
-        <div className="lg:w-1/3 p-4 bg-gray-50 flex justify-center items-center">
-          <img
-            src={pokemon.image.value}
-            alt={pokemon.label.value}
-            className="w-full h-auto max-w-xs object-cover rounded-md border border-gray-200 shadow-md"
-          />
+        <div className="lg:w-1/3 p-6 bg-gradient-to-br from-sky-50 to-white flex justify-center items-center">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <img
+              src={pokemon.image.value}
+              alt={pokemon.label.value}
+              className="w-full h-auto max-w-xs object-contain rounded-lg transform group-hover:scale-110 transition-transform duration-300"
+            />
+          </div>
         </div>
         {/* Infos à droite */}
-        <div className="lg:w-2/3 p-6">
-          <h1 className="text-3xl font-bold text-sky-600 mb-4">
-            {pokemon.label.value}
-          </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <p>
-              <strong>Type :</strong>
-              <span className="flex gap-1 mt-1">
-                {pokemon.types.value.split(",").map((type: string) => (
-                  <Link
-                    key={type}
-                    href={`/details/${type}/poketype`}
-                    className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
-                  >
-                    {type}
-                  </Link>
-                ))}
-              </span>
-            </p>
-            <p>
-              <strong>Poids :</strong> {pokemon.weight.value}
-            </p>
-            <p>
-              <strong>Taille :</strong> {pokemon.height.value}
-            </p>
-            <p>
-              <strong>Habitat :</strong> {pokemon.habitats.value}
-            </p>
-            <p>
-              <strong>Couleur :</strong> {pokemon.colour.value}
-            </p>
-            <p>
-              <strong>Capacités :</strong> {pokemon.abilitiesList.value}
-            </p>
-            <p>
-              <strong>Capacités cachées :</strong>{" "}
-              {pokemon.hiddenAbilitiesList.value}
-            </p>
-            <p>
-              <strong>Groupes d'œufs :</strong> {pokemon.eggGroups.value}
-            </p>
+        <div className="lg:w-2/3 p-6 space-y-6">
+          <div className="flex justify-between items-start">
+            <h1 className="text-3xl font-bold text-sky-600 tracking-tight">
+              {pokemon.label.value}
+            </h1>
+            <Link
+              href={`/details/${id}/pokecard`}
+              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-sky-500 rounded-lg hover:bg-sky-400 transition-all duration-300 hover:shadow-md"
+            >
+              Voir la carte
+            </Link>
           </div>
-          <div className="mt-4">
-            <p>
-              <strong>Description :</strong> {pokemon.comment.value}
+
+          <div className="flex flex-wrap gap-2">
+            {pokemon.types.value.split(",").map((type: string) => (
+              <Link
+                key={type}
+                href={`/details/${type}/poketype`}
+                className={`px-4 py-1 rounded-full text-sm font-medium ${TYPE_COLORS[type] || "bg-gray-200 text-gray-800"} hover:shadow-sm transition-shadow`}
+              >
+                {type}
+              </Link>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="text-sm font-semibold text-gray-600 mb-2">
+                  Caractéristiques
+                </h3>
+                <div className="space-y-2">
+                  <p className="flex justify-between">
+                    <span className="text-gray-500">Taille</span>
+                    <span className="font-medium">{pokemon.height.value}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-500">Poids</span>
+                    <span className="font-medium">{pokemon.weight.value}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-500">Couleur</span>
+                    <span className="font-medium">{pokemon.colour.value}</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="text-sm font-semibold text-gray-600 mb-2">
+                  Habitats
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {pokemon.habitats.value.split(",").map((habitat: string) => (
+                    <Link
+                      key={habitat}
+                      href={`/details/${habitat}/habitat`}
+                      className="px-3 py-1 bg-white rounded-full text-sm text-sky-600 hover:bg-sky-50 border border-sky-100 transition-colors"
+                    >
+                      {habitat}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="text-sm font-semibold text-gray-600 mb-2">
+                  Capacités
+                </h3>
+                <div className="space-y-2">
+                  {pokemon.abilitiesList.value
+                    .split(",")
+                    .map((ability: string) => (
+                      <Link
+                        key={ability}
+                        href={`/details/${ability}/ability`}
+                        className="block px-3 py-2 bg-white rounded-lg text-sm hover:bg-sky-50 transition-colors"
+                      >
+                        {ability.charAt(0).toUpperCase() + ability.slice(1)}
+                      </Link>
+                    ))}
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="text-sm font-semibold text-gray-600 mb-2">
+                  Capacités cachées
+                </h3>
+                <p className="text-sm text-gray-700">
+                  {pokemon.hiddenAbilitiesList.value}
+                </p>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="text-sm font-semibold text-gray-600 mb-2">
+                  Groupes d'œufs
+                </h3>
+                <p className="text-sm text-gray-700">
+                  {pokemon.eggGroups.value}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="text-sm font-semibold text-gray-600 mb-2">
+              Description
+            </h3>
+            <p className="text-gray-700 leading-relaxed">
+              {pokemon.comment.value}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Cartes Pokémon */}
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Cartes associées</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {cards.map(
-            (card: { id: string; images: { small: string }; name: string }) => (
-              <div
-                key={card.id}
-                className="flex flex-col items-center bg-white rounded-lg shadow-md overflow-hidden p-4"
-              >
-                <img
-                  src={card.images.small}
-                  alt={card.name}
-                  className="w-full h-auto object-cover rounded-md border border-gray-200 shadow-md"
-                />
-                <p className="text-sm font-medium mt-2 text-center">
-                  {card.name}
-                </p>
-              </div>
-            ),
-          )}
-        </div>
-        <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-sky-600 mb-4">
-            Pokémons de la même couleur :
-          </h2>
-          <List list={pokemonsOfSameColor} />
-        </div>
+      <div className="mt-12">
+        <h2 className="text-2xl font-semibold text-sky-600 mb-6">
+          Pokémons de la même couleur
+        </h2>
+        <List list={pokemonsOfSameColor} />
       </div>
     </div>
   );

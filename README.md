@@ -1,49 +1,67 @@
 # Fastack
 
-Lancer le projet :
+A Pokemon database project using Virtuoso and Docker.
+
+## Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Node.js](https://nodejs.org/) (Latest LTS version recommended)
+- [pnpm](https://pnpm.io/) (Will be installed in the steps below)
+
+## Installation Steps
+
+### 1. Start Docker Containers
 
 ```bash
+# Navigate to docker directory
+cd apps/.docker
+
+# Start the containers in detached mode
+docker compose up -d
+```
+
+### 2. Configure Virtuoso Database
+
+Access the Virtuoso container and load the data:
+
+```bash
+# Access the container
+docker exec -it virtuoso bash
+
+# Access SQL console
+isql-v
+
+# Execute these commands in the SQL console:
+ld_dir('/data', 'poke-a.nq', 'http://www.example.com/my-graph');
+rdf_loader_run();
+```
+
+### 3. Install Dependencies and Start Development Server
+
+```bash
+# Install pnpm globally
 npm i -g pnpm
 
-npm i
+# Install project dependencies
+pnpm i
 
+# Build the project
 pnpm build
 
+# Start the development server
 cd apps/frontend
 
 pnpm dev
 ```
 
-# Virtuoso
+## Accessing the Application
 
-Once the container is up update the virtuoso.ini file
+Once all steps are completed, you can access the application at `http://localhost:3001` (or the port specified in your environment settings).
 
-```
-DirsAllowed			=  /usr/local/virtuoso-opensource/share/virtuoso/vad, .
-```
+## Troubleshooting
 
-Down and up the container then enter bash
+If you encounter any issues:
 
-````bash
-docker exec -it virtuoso bash
-```
-
-Execute the following commands in order to load the graph into the container
-
-```bash
-# access sql console
-isql-v
-
-# load the data
-ld_dir('/data', 'poke-a.nq', 'http://www.example.com/my-graph');
-
-rdf_loader_run();
-
-```
-Go to http://localhost:8890/sparql and query your graph
-
-
-
-
-
-````
+1. Ensure all Docker containers are running (`docker ps`)
+2. Check Docker logs (`docker logs virtuoso`)
+3. Verify all dependencies are installed correctly

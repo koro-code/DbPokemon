@@ -63,20 +63,7 @@ LIMIT 100
 
   const pokemons = await fetchSparql<Array<Pokemon>>(QUERY);
 
-  const heading = `${pokemons.length} Pokémon${pokemons.length > 1 ? "s" : ""} du type ${id} trouvé${pokemons.length > 1 ? "s" : ""}`;
-
-  return (
-    <div>
-      <div className="pb-6 mb-6 border-b border-slate-200">
-        <h2 className="text-xl font-medium text-slate-800 mb-2">
-          Résultats pour l'habitat:{" "}
-          <span className="text-sky-600 font-semibold">{id}</span>
-        </h2>
-        <p className="text-sm text-slate-500">{heading}</p>
-      </div>
-      <List list={pokemons} />
-    </div>
-  );
+  return <List list={pokemons} />;
 };
 
 export default Page;

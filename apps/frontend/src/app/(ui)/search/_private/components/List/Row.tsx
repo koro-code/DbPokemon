@@ -24,7 +24,7 @@ export type Pokemon = {
   image: PokemonValue;
 };
 
-const colors: Record<string, string> = {
+const TYPE_COLORS: Record<string, string> = {
   Flying: "bg-sky-100 text-sky-800",
   Poison: "bg-purple-100 text-purple-800",
   Fire: "bg-red-100 text-red-800",
@@ -72,7 +72,7 @@ const Row: FC<Pokemon> = (props) => {
               <Link
                 key={type}
                 href={`/details/${type}/poketype`}
-                className={`px-3 py-0.5 rounded-full text-sm font-medium ${colors[type] || "bg-gray-200 text-gray-800"}`}
+                className={`px-3 py-0.5 rounded-full text-sm font-medium ${TYPE_COLORS[type] || "bg-gray-200 text-gray-800"}`}
               >
                 {type}
               </Link>
@@ -81,12 +81,17 @@ const Row: FC<Pokemon> = (props) => {
           <div className="grid grid-cols-2 gap-2 text-xs mb-3">
             <div>
               <span className="text-gray-500">Habitats:</span>{" "}
-              <Link
-                href={`/details/${props.habitats.value}/habitat`}
-                className="text-sky-500 hover:underline"
-              >
-                {props.habitats.value}
-              </Link>
+              {props.habitats.value.split(", ").map((habitat) => {
+                return (
+                  <Link
+                    key={habitat}
+                    href={`/details/${props.habitats.value}/habitat`}
+                    className="text-sky-500 hover:underline"
+                  >
+                    {habitat}
+                  </Link>
+                );
+              })}
             </div>
             <div>
               <span className="text-gray-500">Couleur:</span>{" "}
@@ -101,12 +106,20 @@ const Row: FC<Pokemon> = (props) => {
             </div>
           </div>
         </div>
-        <Link
-          href={`/details/${props.pokemonName.value}/pokemon`}
-          className="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-sky-500 rounded-lg hover:bg-sky-400 transition-colors gap-1"
-        >
-          Voir les détails
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href={`/details/${props.pokemonName.value}/pokemon`}
+            className="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-sky-500 rounded-lg hover:bg-sky-400 transition-colors gap-1"
+          >
+            Voir les détails
+          </Link>
+          <Link
+            href={`/details/${props.pokemonName.value}/pokecard`}
+            className="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-sky-500 rounded-lg hover:bg-sky-400 transition-colors gap-1"
+          >
+            Voir la carte
+          </Link>
+        </div>
       </div>
     </div>
   );

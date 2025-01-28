@@ -13,7 +13,7 @@ export const BaseLayout: FC<
             {props.title}
           </h1>
         </header>
-        <main className="bg-white shadow-sm rounded-lg p-6">
+        <main>
           <div className="space-y-6">{props.children}</div>
         </main>
       </div>
